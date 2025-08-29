@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Nombre del cupón -->
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cupón de Descuento"
+            android:textSize="18sp"/>
+
+        <!-- Tipo de cupón (descuento, envío gratis, etc.) -->
+        <TextView
+            android:id="@+id/tvTipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descuento"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <!-- Código del cupón -->
+        <TextView
+            android:id="@+id/tvCodigo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Código: ABC123"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <!-- Fecha de expiración -->
+        <TextView
+            android:id="@+id/tvFechaExpiracion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expira el: 01/01/2025"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <!-- Estado del cupón -->
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activo"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_green_dark"/>
+
+        <!-- Botón para canjear -->
+        <Button
+            android:id="@+id/btnCanjear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Canjear"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_blue_dark"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

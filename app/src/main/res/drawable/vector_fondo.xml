@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1080dp"
+    android:height="1920dp"
+    android:viewportWidth="1080"
+    android:viewportHeight="1920">
+
+    <!-- Fondo Azul -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M0,0h1080v1920h-1080z"/>
+
+    <!-- Líneas diagonales -->
+    <path
+        android:fillColor="#64B5F6"
+        android:fillAlpha="0.5"
+        android:pathData="M0,500l1080,500v500l-1080,-500z"/>
+
+    <path
+        android:fillColor="#1976D2"
+        android:fillAlpha="0.7"
+        android:pathData="M0,1000l1080,500v500l-1080,-500z"/>
+</vector>

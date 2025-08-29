@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btnDatosPersonales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DATOS PERSONALES" />
+
+    <Button
+        android:id="@+id/btnNotificaciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NOTIFICACIONES" />
+
+    <Button
+        android:id="@+id/btnMisCompras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MIS COMPRAS" />
+
+    <Button
+        android:id="@+id/btnDirecciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DIRECCIONES" />
+
+    <Button
+        android:id="@+id/btnCupones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CUPONES" />
+
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CERRAR SESIÓN"
+        android:background="@android:color/holo_red_dark"
+        android:textColor="@android:color/white" />
+</LinearLayout>
+

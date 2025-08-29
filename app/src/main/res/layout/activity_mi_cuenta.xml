@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/fondo_azul">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mi Cuenta"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp"
+        android:textColor="@android:color/white" />
+
+    <!-- Botón Datos Personales -->
+    <Button
+        android:id="@+id/btnDatosPersonales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DATOS PERSONALES"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/boton_negro"
+        android:drawableEnd="@drawable/person"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón Notificaciones -->
+    <Button
+        android:id="@+id/btnNotificaciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NOTIFICACIONES"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/boton_negro"
+        android:drawableEnd="@drawable/ic_notificacion"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón Mis Compras -->
+    <Button
+        android:id="@+id/btnMisCompras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MIS COMPRAS"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/boton_negro"
+        android:drawableEnd="@drawable/ic_compra"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón Direcciones -->
+    <Button
+        android:id="@+id/btnDirecciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DIRECCIONES"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/boton_negro"
+        android:drawableEnd="@drawable/ic_location"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón Cupones -->
+    <Button
+        android:id="@+id/btnCupones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CUPONES"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/boton_negro"
+        android:drawableEnd="@drawable/ic_cupon"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Botón Cerrar Sesión (Rojo) -->
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CERRAR SESIÓN"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/boton_negro"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
+
+
+
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Sombra exterior -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="50dp" />
+            <solid android:color="#1C1C1C"/>  <!-- Color oscuro para la sombra -->
+        </shape>
+    </item>
+
+    <!-- Botón principal con gradiente -->
+    <item android:top="5dp" android:bottom="5dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="50dp" />
+            <gradient
+                android:angle="90"
+                android:startColor="#FF007A"
+                android:endColor="#8327FF"/>
+        </shape>
+    </item>
+
+</layer-list>

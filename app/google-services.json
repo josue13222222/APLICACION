@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "831636749246",
+    "project_id": "app-robot-674cb",
+    "storage_bucket": "app-robot-674cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831636749246:android:9f3d4926c8ab9c0a8b17ef",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCESmKMqoV5s_mRLoZy3hZcj7boHzkaJLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

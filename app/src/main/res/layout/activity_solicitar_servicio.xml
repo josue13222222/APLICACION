@@ -1,0 +1,110 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solicitud de Servicio Técnico"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:layout_marginBottom="32dp" />
+
+        <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre del cliente"
+            android:padding="14dp"
+            android:background="@drawable/rounded_edittext"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/etTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Número de contacto"
+            android:padding="14dp"
+            android:inputType="phone"
+            android:background="@drawable/rounded_edittext"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etEquipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tipo de equipo"
+            android:padding="14dp"
+            android:background="@drawable/rounded_edittext"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/etProblema"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:hint="Descripción del problema"
+            android:padding="14dp"
+            android:gravity="top|start"
+            android:background="@drawable/rounded_edittext"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"
+            android:inputType="textMultiLine"
+            android:maxLines="6" />
+
+        <!-- Botones para agregar fotos -->
+        <Button
+            android:id="@+id/btnAgregarFotos"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Agregar fotos desde galería"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#1976D2"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnTomarFoto"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Tomar foto con cámara"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#F57C00"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Contenedor dinámico para las imágenes seleccionadas -->
+        <LinearLayout
+            android:id="@+id/contenedorImagenes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="32dp" />
+
+        <Button
+            android:id="@+id/btnEnviar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Enviar por WhatsApp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#388E3C"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</ScrollView>

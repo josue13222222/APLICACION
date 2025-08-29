@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E00E24"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/robot"
+            android:layout_width="154dp"
+            android:layout_height="98dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Medical Icon"
+            android:src="@drawable/robot" />
+
+
+        <!-- Contenedor para el campo de usuario y el icono de búsqueda -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edittext"
+                android:hint="Ingresa tu usuario"
+                android:padding="12dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#B0B0B0"
+                android:paddingEnd="50dp" />
+
+            <ImageButton
+                android:id="@+id/btnBuscarUsuario"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:src="@android:drawable/ic_menu_search"
+                android:contentDescription="Buscar usuario" />
+        </RelativeLayout>
+
+        <!-- Contenedor para el campo de contraseña y el icono del ojo -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <EditText
+                android:id="@+id/contrasena"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edittext"
+                android:hint="Ingresa tu contraseña"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="#B0B0B0"
+                android:paddingEnd="50dp" />
+
+            <ImageButton
+                android:id="@+id/btnVerContrasena"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:src="@drawable/ojocerrado"
+                android:contentDescription="Mostrar/Ocultar contraseña" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/olvidasteContrasena"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:text="¿Has olvidado tu contraseña?"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_button"
+            android:text="LOG IN"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/registro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/purple_500"
+            android:gravity="center"
+            android:text="REGISTER"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</FrameLayout>
+
+
+
+

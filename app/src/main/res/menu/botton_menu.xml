@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/nav_account"
+        android:icon="@drawable/ic_cuenta"
+        android:title="Mi Cuenta" />
+
+    <item
+        android:id="@+id/nav_categories"
+        android:icon="@drawable/ic_categorias"
+        android:title="Categorías" />
+
+    <item
+        android:id="@+id/nav_store"
+        android:icon="@drawable/ic_tienda"
+        android:title="En tienda" />
+
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@drawable/ic_mas"
+        android:title="Más" />
+
+
+</menu>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tech_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
+
+        <!-- Texto de bienvenida -->
+        <TextView
+            android:id="@+id/textoBienvenida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¡Bienvenido, Josue!"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Texto de puntos -->
+        <TextView
+            android:id="@+id/textoPuntos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tienes 0 puntos de cupones"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Logo de la empresa -->
+        <ImageView
+            android:id="@+id/logoEmpresa"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/robot"
+            android:contentDescription="Logo Empresa"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Contenedor de botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Fila 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="16dp">
+
+                <Button
+                    android:id="@+id/btnMicuenta"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="MI CUENTA"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:drawableEnd="@drawable/ic_home"
+                    android:drawablePadding="8dp"
+                    android:background="@drawable/btn_rounded"
+                    android:layout_marginEnd="2dp" />
+
+                <Button
+                    android:id="@+id/btnNuevo"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="NUEVO"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:background="@drawable/btn_rounded"
+                    android:layout_marginStart="2dp" />
+            </LinearLayout>
+
+            <!-- Fila 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btnMas"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="MÁS"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:drawableEnd="@drawable/ic_mas"
+                    android:drawablePadding="8dp"
+                    android:background="@drawable/btn_rounded"
+                    android:layout_marginEnd="2dp" />
+
+                <Button
+                    android:id="@+id/btnContacto"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="CONTACTO"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:drawableEnd="@drawable/ic_tienda"
+                    android:drawablePadding="8dp"
+                    android:background="@drawable/btn_rounded"
+                    android:layout_marginStart="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botón Robot al Rescate -->
+        <Button
+            android:id="@+id/btnRobotRescate"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="ROBOT AL RESCATE"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:background="@drawable/btn_rounded"
+            android:layout_marginTop="20dp" />
+
+        <!-- Texto redes sociales -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Puedes encontrarnos en:"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/logoFacebook"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/facebook"
+                android:contentDescription="Logo de Facebook"
+                android:layout_marginHorizontal="12dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+
+            <!-- Logo Instagram -->
+            <ImageView
+                android:id="@+id/logoInstagram"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/instagrann"
+                android:contentDescription="Instagram"
+                android:layout_marginHorizontal="12dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:background="@drawable/circle_shape"
+                android:clipToOutline="true" />
+
+            <!-- Logo TikTok -->
+            <ImageView
+                android:id="@+id/logoTiktok"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/tiktokk"
+                android:contentDescription="TikTok"
+                android:layout_marginHorizontal="12dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:background="@drawable/circle_shape"
+                android:clipToOutline="true" />
+
+        </LinearLayout>
+
+        <!-- Botón cerrar sesión -->
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="CERRAR SESIÓN"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:background="@drawable/btn_rounded"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
+</ScrollView>
