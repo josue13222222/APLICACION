@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services") // Plugin de Google Services
-    kotlin("kapt") // SOLO este extra es necesario
+    id("com.google.gms.google-services") // 🔥 Plugin de Firebase
+    kotlin("kapt") // Necesario para Glide y otros procesadores
 }
 
 android {
@@ -31,12 +31,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -73,13 +73,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Firebase (BoM)
-    implementation(platform("com.google.firebase:firebase-bom:30.1.0"))
-    implementation("com.google.firebase:firebase-auth")
+    // 🔥 Firebase (última versión con KTX)
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-database-ktx")
 
-    // Glide (con kapt para el compilador)
+    // Glide (para imágenes)
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
 

@@ -50,7 +50,7 @@ class BienvenidaActivity : AppCompatActivity() {
             tvPuntos.text = "Tienes 0 puntos actualmente"
         }
 
-        // Animación latido infinito
+        // Animación latido infinito del logo
         val logo = findViewById<ImageView>(R.id.logoEmpresa)
         val latidoAnim = AnimationUtils.loadAnimation(this, R.anim.latido_logo).apply {
             repeatCount = Animation.INFINITE
@@ -63,7 +63,10 @@ class BienvenidaActivity : AppCompatActivity() {
         val btnServicioTecnico = findViewById<Button>(R.id.btnRobotRescate)
         val btnMas = findViewById<Button>(R.id.btnMas)
         val btnCerrarSesion = findViewById<Button>(R.id.btnCerrarSesion)
+        val btnEmpenosActivity = findViewById<Button>(R.id.btnEmpenos)
+        val btnCupones = findViewById<Button>(R.id.btnCupones) // ← ESTE ES EL BOTÓN “MI CUPÓN”
 
+        // Funcionalidad de botones
         btnMicuenta.setOnClickListener {
             startActivity(Intent(this, MiCuentaActivity::class.java))
         }
@@ -74,6 +77,15 @@ class BienvenidaActivity : AppCompatActivity() {
 
         btnMas.setOnClickListener {
             startActivity(Intent(this, MasActivity::class.java))
+        }
+
+        btnEmpenosActivity.setOnClickListener {
+            startActivity(Intent(this, EmpenosActivity::class.java))
+        }
+
+        // Botón Mis Cupones
+        btnCupones.setOnClickListener {
+            startActivity(Intent(this, MisPuntosActivity::class.java))
         }
 
         // Logo de Facebook con enlace

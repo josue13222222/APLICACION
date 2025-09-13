@@ -71,17 +71,19 @@
                     android:layout_marginEnd="2dp" />
 
                 <Button
-                    android:id="@+id/btnNuevo"
+                    android:id="@+id/btnEmpenos"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
                     android:layout_weight="1"
-                    android:text="NUEVO"
+                    android:background="@drawable/btn_rounded"
+                    android:drawableEnd="@drawable/ic_cupon"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:text="EMPEÑOS"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:background="@drawable/btn_rounded"
-                    android:layout_marginStart="2dp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <!-- Fila 2 -->
@@ -108,11 +110,11 @@
                     android:layout_marginEnd="2dp" />
 
                 <Button
-                    android:id="@+id/btnContacto"
+                    android:id="@+id/btnCupones"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"
-                    android:text="CONTACTO"
+                    android:text="MI CUPON"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"

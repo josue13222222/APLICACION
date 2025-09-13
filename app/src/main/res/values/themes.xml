@@ -1,0 +1,11 @@
+<resources>
+    <!-- Tema oscuro personalizado -->
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Fondo general de la app -->
+        <item name="android:windowBackground">#000000</item>
+        <!-- Texto blanco por defecto -->
+        <item name="android:textColor">#FFFFFF</item>
+        <!-- Color de botones antiguos (no Material3) -->
+        <item name="colorAccent">#FF0000</item>
+    </style>
+</resources>

@@ -3,15 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myapplication">
 
-    <!-- Permisos necesarios -->
+    <!-- 📌 Permisos necesarios -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <!-- Declaración de características del dispositivo -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <!-- 📌 Declaración de características del dispositivo -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".Aplicacion"
@@ -20,13 +23,20 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="Robot"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat"
-        android:requestLegacyExternalStorage="true"
+        android:theme="@style/Theme.MyApplication">
         tools:targetApi="31">
 
-        <!-- FileProvider para compartir imágenes con cámara -->
+        <!-- 📌 Pantalla de Empeños -->
+        <activity
+            android:name=".EmpenosActivity"
+            android:exported="false"
+            android:label="@string/title_activity_empenos"
+            android:theme="@style/Theme.AppCompat" />
+
+        <!-- 📌 FileProvider para compartir imágenes con cámara -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -37,29 +47,69 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- Lista de actividades -->
-        <activity android:name=".SistemaPuntos" android:exported="false" />
-        <activity android:name=".CarritoActivity" android:exported="false" />
-        <activity android:name=".CuponesActivity" android:exported="false" />
-        <activity android:name=".AddressFormActivity" android:exported="false" />
-        <activity android:name=".MainActivity" android:exported="true">
+        <!-- 📌 Lista de actividades -->
+        <activity
+            android:name=".CuponesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AddressFormActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BienvenidaActivity" android:exported="false" />
-        <activity android:name=".AdminPanelActivity" android:exported="false" />
-        <activity android:name=".MiCuentaActivity" android:exported="false" />
-        <activity android:name=".DatosPersonalesActivity" android:exported="false" />
-        <activity android:name=".CategoriasActivity" android:exported="false" />
-        <activity android:name=".DetalleProductoActivity" android:exported="false" />
-        <activity android:name=".MisComprasActivity" android:exported="false" />
-        <activity android:name=".NotificacionesActivity" android:exported="false" />
-        <activity android:name=".ServicioTecnicoActivity" android:exported="false" />
-        <activity android:name=".SolicitarServicioActivity" android:exported="false" />
-        <activity android:name=".SeguimientoActivity" android:exported="false" />
-        <activity android:name=".MasActivity" android:exported="false" />
+
+        <activity
+            android:name=".BienvenidaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminPanelActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MiCuentaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DatosPersonalesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetalleProductoActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MisComprasActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".NotificacionesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ServicioTecnicoActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SolicitarServicioActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SeguimientoActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MasActivity"
+            android:exported="false" />
+
+        <activity android:name=".MisPuntosActivity" />
 
     </application>
 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F6FA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- Logo del robot -->
+        <ImageView
+            android:id="@+id/logoRobot"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_cerrar"
+            android:contentDescription="Logo Robot Empeños"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Título principal -->
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bienvenido a Robot Empeños"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Subtítulo -->
+        <TextView
+            android:id="@+id/txtSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecciona una opción"
+            android:textSize="16sp"
+            android:textColor="#7F8C8D"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Card para los botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="24dp"
+            android:clipToOutline="true">
+
+            <!-- Botón Registrar Empeños -->
+            <Button
+                android:id="@+id/btnRegistrarEmpeno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📥 Registrar Empeños"
+                android:textSize="18sp"
+                android:backgroundTint="#3498DB"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Botón Ver mis Empeños -->
+            <Button
+                android:id="@+id/btnVerEmpenos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📄 Ver mis Empeños"
+                android:textSize="18sp"
+                android:backgroundTint="#2ECC71"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <!-- Texto informativo -->
+        <TextView
+            android:id="@+id/txtInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tus empeños te otorgan puntos que puedes canjear por cupones y descuentos."
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#7F8C8D"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:padding="8dp" />
+
+    </LinearLayout>
+</ScrollView>
