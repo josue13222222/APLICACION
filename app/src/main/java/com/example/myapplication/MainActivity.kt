@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var olvidoContrasena: TextView
     private lateinit var btnFacebook: ImageButton
     private lateinit var logoImage: ImageView
+    private lateinit var btnAccesoAdmin: Button
 
     private var isPasswordVisible = false
 
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         registro = findViewById(R.id.registro)
         olvidoContrasena = findViewById(R.id.olvidasteContrasena)
         logoImage = findViewById(R.id.robot)
+        btnAccesoAdmin = findViewById(R.id.btnAccesoAdmin)
 
         iniciarAnimacionLatido()
         cargarCorreoGuardado()
@@ -93,6 +95,11 @@ class MainActivity : AppCompatActivity() {
 
         btnBuscarUsuario.setOnClickListener {
             buscarUsuariosPorTelefono()
+        }
+
+        btnAccesoAdmin.setOnClickListener {
+            val intent = Intent(this, AdminLoginActivity::class.java)
+            startActivity(intent)
         }
     }
 

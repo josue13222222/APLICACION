@@ -1,6 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/admin_gradient_background"
+    tools:context=".AdminDashboardActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Header Admin -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/admin_header_card"
+            android:padding="20dp"
+            android:elevation="8dp">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="Admin Logo"
+                android:src="@drawable/robot"
+                android:background="@drawable/admin_icon_circle"
+                android:padding="12dp" />
+
+            <TextView
+                android:id="@+id/textoBienvenidaAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¡Bienvenido Administrador!"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:shadowColor="#000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4" />
+
+            <TextView
+                android:id="@+id/textoEstadisticas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Cargando estadísticas..."
+                android:textColor="#E0E0E0"
+                android:textSize="14sp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Botón IA Reconocimiento -->
+        <!-- Agregando botón de IA con diseño especial -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🤖 INTELIGENCIA ARTIFICIAL"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:shadowColor="#000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <Button
+                android:id="@+id/btnIAReconocimiento"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/admin_ai_button"
+                android:text="📱 RECONOCER LAPTOP CON IA"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:elevation="12dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+        </LinearLayout>
+
+        <!-- Botones de Gestión -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📋 GESTIÓN"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:shadowColor="#000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <Button
+                android:id="@+id/btnGestionUsuarios"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_orange"
+                android:text="👥 GESTIÓN DE USUARIOS"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+            <Button
+                android:id="@+id/btnGestionEmpenos"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_orange"
+                android:text="💎 GESTIÓN DE EMPEÑOS"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+            <Button
+                android:id="@+id/btnGestionCupones"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_orange"
+                android:text="🎫 GESTIÓN DE CUPONES"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+            <!-- Agregando botón de gestión de reparaciones -->
+            <Button
+                android:id="@+id/btnGestionReparaciones"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_blue"
+                android:text="🔧 GESTIÓN DE REPARACIONES"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+            <!-- Agregando botón de gestión de pagos -->
+            <Button
+                android:id="@+id/btnGestionPagos"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_purple"
+                android:text="💰 GESTIÓN DE PAGOS"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+        </LinearLayout>
+
+        <!-- Botones de Herramientas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🛠️ HERRAMIENTAS"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:shadowColor="#000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <Button
+                android:id="@+id/btnReportes"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_green"
+                android:text="📊 REPORTES Y ESTADÍSTICAS"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+            <Button
+                android:id="@+id/btnConfiguracion"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/admin_button_blue"
+                android:text="⚙️ CONFIGURACIÓN DEL SISTEMA"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:elevation="6dp"
+                android:stateListAnimator="@animator/button_press_animation" />
+
+        </LinearLayout>
+
+        <!-- Botón Cerrar Sesión -->
+        <Button
+            android:id="@+id/btnCerrarSesionAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/admin_button_red"
+            android:text="🚪 CERRAR SESIÓN"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:elevation="6dp"
+            android:stateListAnimator="@animator/button_press_animation" />
+
+    </LinearLayout>
+
+</ScrollView>

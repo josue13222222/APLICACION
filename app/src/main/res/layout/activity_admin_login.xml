@@ -1,6 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A237E"
+    tools:context=".AdminLoginActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Logo Admin -->
+        <ImageView
+            android:id="@+id/robotAdmin"
+            android:layout_width="154dp"
+            android:layout_height="98dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Admin Icon"
+            android:src="@drawable/robot" />
+
+        <!-- Título Admin -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="PANEL ADMINISTRADOR"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Campo Email Admin -->
+        <EditText
+            android:id="@+id/adminEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext"
+            android:hint="Email de administrador"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#B0B0B0" />
+
+        <!-- Contenedor para contraseña con icono -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <EditText
+                android:id="@+id/adminPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edittext"
+                android:hint="Contraseña de administrador"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:paddingEnd="50dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#B0B0B0" />
+
+            <ImageButton
+                android:id="@+id/btnVerContrasenaAdmin"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
+                android:background="@null"
+                android:contentDescription="Mostrar/Ocultar contraseña"
+                android:src="@drawable/ojocerrado" />
+
+        </RelativeLayout>
+
+        <!-- Olvidaste contraseña -->
+        <TextView
+            android:id="@+id/olvidasteContrasenaAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:text="¿Has olvidado tu contraseña?"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Botón Login Admin -->
+        <Button
+            android:id="@+id/btnLoginAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#FF6F00"
+            android:text="ACCEDER COMO ADMIN"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <!-- Botón Volver al Login Normal -->
+        <Button
+            android:id="@+id/btnVolverLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:text="← Volver al login de usuarios"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</FrameLayout>

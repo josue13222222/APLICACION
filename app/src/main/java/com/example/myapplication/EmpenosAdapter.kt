@@ -1,12 +1,20 @@
 package com.example.myapplication
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class EmpenosAdapter(private val items: List<Empeno>) : RecyclerView.Adapter<EmpenosAdapter.VH>() {
+class EmpenosAdapter(
+    private val context: Context,
+    private val items: MutableList<Empeno>,
+    private val onEmpenoSelected: (Empeno) -> Unit = {}
+) : RecyclerView.Adapter<EmpenosAdapter.VH>() {
+
+    private var selectedPosition = -1
+
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val tvProducto: TextView = view.findViewById(R.id.tvProducto)
         val tvDetalle: TextView = view.findViewById(R.id.tvDetalle)
@@ -23,7 +31,28 @@ class EmpenosAdapter(private val items: List<Empeno>) : RecyclerView.Adapter<Emp
         holder.tvProducto.text = e.producto
         holder.tvDetalle.text = "${e.estado} • S/${e.valor} • ${e.puntos} pts"
         holder.tvFecha.text = e.fecha
+
+        holder.itemView.setOnClickListener {
+            selectedPosition = position
+            onEmpenoSelected(e)
+            notifyDataSetChanged()
+        }
+
+        holder.itemView.setBackgroundColor(
+            if (selectedPosition == position)
+                context.getColor(android.R.color.holo_blue_light)
+            else
+                context.getColor(android.R.color.white)
+        )
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun getSelectedEmpeno(): Empeno? {
+        return if (selectedPosition >= 0 && selectedPosition < items.size) {
+            items[selectedPosition]
+        } else {
+            null
+        }
+    }
 }

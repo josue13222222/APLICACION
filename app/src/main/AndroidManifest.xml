@@ -26,7 +26,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
+        android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
 
         <!-- 📌 Pantalla de Empeños -->
@@ -110,6 +110,38 @@
             android:exported="false" />
 
         <activity android:name=".MisPuntosActivity" />
+
+        <!-- Agregando actividades de administrador -->
+        <activity android:name=".AdminLoginActivity"
+            android:exported="false" />
+        <activity android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity android:name=".AdminUsuariosActivity"
+            android:exported="false" />
+        <activity android:name=".AdminEmpenosActivity"
+            android:exported="false" />
+        <activity android:name=".AdminCuponesActivity"
+            android:exported="false" />
+        <activity android:name=".AdminReportesActivity"
+            android:exported="false" />
+        <activity android:name=".AdminConfiguracionActivity"
+            android:exported="false" />
+
+        <!-- Agregando actividades del sistema de pagos -->
+        <activity android:name=".PagosActivity"
+            android:exported="false" />
+        <activity android:name=".AdminPagosActivity"
+            android:exported="false" />
+
+        <!-- Agregando nuevas actividades de seguimiento de reparaciones -->
+        <activity android:name=".SeguimientoReparacionActivity"
+            android:exported="false" />
+        <activity android:name=".AdminOrdenesReparacionActivity"
+            android:exported="false" />
+        <activity android:name=".RegistrarEmpenoActivity"
+            android:exported="false" />
+        <activity android:name=".VerEmpenosActivity"
+            android:exported="false" />
 
     </application>
 

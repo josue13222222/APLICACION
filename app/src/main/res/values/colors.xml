@@ -8,4 +8,19 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+
+    <!-- Agregando colores para el sistema de pagos -->
+    <color name="primary_color">#2196F3</color>
+    <color name="card_background">#F5F5F5</color>
+    <color name="yape_color">#722F8B</color>
+    <color name="plin_color">#00BCD4</color>
+    <color name="bcp_color">#FF5722</color>
+    <color name="green">#4CAF50</color>
+    <color name="orange">#FF9800</color>
+    <color name="blue">#2196F3</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- Colores nuevos para evitar errores -->
+    <color name="pago_green">#4CAF50</color>
+    <color name="pago_blue">#2196F3</color>
 </resources>

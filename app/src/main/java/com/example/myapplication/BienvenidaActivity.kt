@@ -31,24 +31,7 @@ class BienvenidaActivity : AppCompatActivity() {
         tvBienvenida = findViewById(R.id.textoBienvenida)
         tvPuntos = findViewById(R.id.textoPuntos)
 
-        // Mostrar datos del usuario
-        auth.currentUser?.let { currentUser ->
-            val uid = currentUser.uid
-            firestore.collection("usuarios").document(uid).get()
-                .addOnSuccessListener { document ->
-                    val nombre = document.getString("nombre")
-                    val puntosCupones = document.getLong("puntosCupones") ?: 0
-                    tvBienvenida.text = if (!nombre.isNullOrEmpty()) "¡Bienvenido, $nombre!" else "¡Bienvenido!"
-                    tvPuntos.text = "Tienes $puntosCupones puntos de cupones"
-                }
-                .addOnFailureListener {
-                    tvBienvenida.text = "¡Bienvenido!"
-                    tvPuntos.text = "Tienes 0 puntos de cupones"
-                }
-        } ?: run {
-            tvBienvenida.text = "¡Bienvenido!"
-            tvPuntos.text = "Tienes 0 puntos actualmente"
-        }
+        actualizarPuntosUsuario()
 
         // Animación latido infinito del logo
         val logo = findViewById<ImageView>(R.id.logoEmpresa)
@@ -64,7 +47,9 @@ class BienvenidaActivity : AppCompatActivity() {
         val btnMas = findViewById<Button>(R.id.btnMas)
         val btnCerrarSesion = findViewById<Button>(R.id.btnCerrarSesion)
         val btnEmpenosActivity = findViewById<Button>(R.id.btnEmpenos)
-        val btnCupones = findViewById<Button>(R.id.btnCupones) // ← ESTE ES EL BOTÓN “MI CUPÓN”
+        val btnCupones = findViewById<Button>(R.id.btnCupones)
+        val btnPagos = findViewById<Button>(R.id.btnPagos)
+        val btnSeguimiento = findViewById<Button>(R.id.btnSeguimiento)
 
         // Funcionalidad de botones
         btnMicuenta.setOnClickListener {
@@ -76,16 +61,23 @@ class BienvenidaActivity : AppCompatActivity() {
         }
 
         btnMas.setOnClickListener {
-            startActivity(Intent(this, MasActivity::class.java))
+            startActivity(Intent(this, SeguimientoReparacionActivity::class.java))
         }
 
         btnEmpenosActivity.setOnClickListener {
             startActivity(Intent(this, EmpenosActivity::class.java))
         }
 
-        // Botón Mis Cupones
         btnCupones.setOnClickListener {
-            startActivity(Intent(this, MisPuntosActivity::class.java))
+            startActivity(Intent(this, CuponesActivity::class.java))
+        }
+
+        btnPagos.setOnClickListener {
+            startActivity(Intent(this, PagosActivity::class.java))
+        }
+
+        btnSeguimiento.setOnClickListener {
+            startActivity(Intent(this, SeguimientoReparacionActivity::class.java))
         }
 
         // Logo de Facebook con enlace
@@ -104,5 +96,61 @@ class BienvenidaActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    private fun actualizarPuntosUsuario() {
+        auth.currentUser?.let { currentUser ->
+            val uid = currentUser.uid
+
+            // Obtener datos del usuario
+            firestore.collection("usuarios").document(uid).get()
+                .addOnSuccessListener { document ->
+                    val nombre = document.getString("nombre")
+                    tvBienvenida.text = if (!nombre.isNullOrEmpty()) "¡Bienvenido, $nombre!" else "¡Bienvenido!"
+                }
+
+            // Calcular puntos totales desde diferentes fuentes
+            calcularPuntosTotales(uid)
+        } ?: run {
+            tvBienvenida.text = "¡Bienvenido!"
+            tvPuntos.text = "Tienes 0 puntos de cupones"
+        }
+    }
+
+    private fun calcularPuntosTotales(uid: String) {
+        var puntosEmpeños = 0
+        var puntosReparaciones = 0
+        var puntosPagos = 0
+
+        // Puntos de empeños
+        firestore.collection("empenos")
+            .whereEqualTo("userId", uid)
+            .whereEqualTo("estado", "Aprobado")
+            .get()
+            .addOnSuccessListener { empenosSnapshot ->
+                puntosEmpeños = empenosSnapshot.documents.sumOf {
+                    it.getLong("puntos")?.toInt() ?: 0
+                }
+                actualizarTextoPuntos(puntosEmpeños, puntosReparaciones, puntosPagos)
+            }
+
+        // Puntos de reparaciones (100 soles = 1 punto)
+        firestore.collection("pagos")
+            .whereEqualTo("userId", uid)
+            .whereEqualTo("estado", "Completado")
+            .get()
+            .addOnSuccessListener { pagosSnapshot ->
+                val totalPagos = pagosSnapshot.documents.sumOf {
+                    it.getDouble("monto") ?: 0.0
+                }
+                puntosPagos = (totalPagos / 100).toInt()
+                actualizarTextoPuntos(puntosEmpeños, puntosReparaciones, puntosPagos)
+            }
+    }
+
+    private fun actualizarTextoPuntos(empeños: Int, reparaciones: Int, pagos: Int) {
+        val totalPuntos = empeños + reparaciones + pagos
+        val valorSoles = totalPuntos * 0.50
+        tvPuntos.text = "Tienes $totalPuntos puntos de cupones (S/. ${"%.2f".format(valorSoles)})"
     }
 }

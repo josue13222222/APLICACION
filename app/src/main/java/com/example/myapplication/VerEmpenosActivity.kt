@@ -20,7 +20,7 @@ class VerEmpenosActivity : AppCompatActivity() {
 
         val rv = findViewById<RecyclerView>(R.id.rvEmpenos)
         rv.layoutManager = LinearLayoutManager(this)
-        adapter = EmpenosAdapter(lista)
+        adapter = EmpenosAdapter(this, lista)
         rv.adapter = adapter
 
         val uid = auth.currentUser?.uid ?: return
