@@ -16,9 +16,6 @@ class MiCuentaActivity : AppCompatActivity() {
         val btnNotificaciones = findViewById<Button>(R.id.btnNotificaciones)
         val btnMisCompras = findViewById<Button>(R.id.btnMisCompras)
         val btnDirecciones = findViewById<Button>(R.id.btnDirecciones)
-        val btnCupones = findViewById<Button>(R.id.btnCupones) // ID correcto
-        val btnCerrarSesion = findViewById<Button>(R.id.btnCerrarSesion)
-
         // Botón Datos Personales
         btnDatosPersonales.setOnClickListener {
             startActivity(Intent(this, DatosPersonalesActivity::class.java))
@@ -39,18 +36,5 @@ class MiCuentaActivity : AppCompatActivity() {
             startActivity(Intent(this, AddressFormActivity::class.java))
         }
 
-        // Botón Cupones
-        btnCupones.setOnClickListener {
-            startActivity(Intent(this, CuponesActivity::class.java)) // Intent para abrir la actividad Cupones
-        }
-
-        // Botón Cerrar Sesión
-        btnCerrarSesion.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this, MainActivity::class.java) // o MainActivity si es tu login
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-        }
     }
 }

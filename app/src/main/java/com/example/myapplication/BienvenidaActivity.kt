@@ -60,9 +60,6 @@ class BienvenidaActivity : AppCompatActivity() {
             startActivity(Intent(this, ServicioTecnicoActivity::class.java))
         }
 
-        btnMas.setOnClickListener {
-            startActivity(Intent(this, SeguimientoReparacionActivity::class.java))
-        }
 
         btnEmpenosActivity.setOnClickListener {
             startActivity(Intent(this, EmpenosActivity::class.java))
@@ -74,10 +71,6 @@ class BienvenidaActivity : AppCompatActivity() {
 
         btnPagos.setOnClickListener {
             startActivity(Intent(this, PagosActivity::class.java))
-        }
-
-        btnSeguimiento.setOnClickListener {
-            startActivity(Intent(this, SeguimientoReparacionActivity::class.java))
         }
 
         // Logo de Facebook con enlace

@@ -99,7 +99,7 @@
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"
-                    android:text="SEGUIMIENTO"
+                    android:text="OFERTA"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
@@ -138,18 +138,6 @@
             android:background="@drawable/btn_rounded"
             android:layout_marginTop="20dp" />
 
-        <!-- Botón de seguimiento adicional -->
-        <Button
-            android:id="@+id/btnSeguimiento"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="🔍 VER MIS REPARACIONES"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:background="@drawable/admin_button_blue"
-            android:layout_marginTop="12dp"
-            android:elevation="6dp" />
 
         <!-- Agregando botón de pagos para usuarios -->
         <Button
