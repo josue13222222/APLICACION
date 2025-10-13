@@ -11,16 +11,11 @@ class AdminCuponesActivity : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
-    private lateinit var etCodigoCupon: EditText
-    private lateinit var etDescuentoPorcentaje: EditText
-    private lateinit var etDescripcion: EditText
-    private lateinit var btnCrearCupon: Button
-    private lateinit var btnEliminarCupon: Button
-    private lateinit var txtTotalCupones: TextView
-    private lateinit var txtCuponesActivos: TextView
+    private lateinit var txtTotalUsuarios: TextView
+    private lateinit var txtPuntosTotal: TextView
 
-    private var cuponesList = mutableListOf<Cupon>()
-    private lateinit var cuponesAdapter: CuponesAdapter
+    private var usuariosList = mutableListOf<Usuario>()
+    private lateinit var usuariosAdapter: UsuariosPuntosAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,127 +24,46 @@ class AdminCuponesActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         initViews()
         setupRecyclerView()
-        loadCupones()
-        loadEstadisticas()
-
-        btnCrearCupon.setOnClickListener { crearCupon() }
-        btnEliminarCupon.setOnClickListener { eliminarCupon() }
+        loadUsuariosConPuntos()
     }
 
     private fun initViews() {
-        recyclerView = findViewById(R.id.recyclerCupones)
-        etCodigoCupon = findViewById(R.id.etCodigoCupon)
-        etDescuentoPorcentaje = findViewById(R.id.etDescuentoPorcentaje)
-        etDescripcion = findViewById(R.id.etDescripcionCupon)
-        btnCrearCupon = findViewById(R.id.btnCrearCupon)
-        btnEliminarCupon = findViewById(R.id.btnEliminarCupon)
-        txtTotalCupones = findViewById(R.id.txtTotalCupones)
-        txtCuponesActivos = findViewById(R.id.txtCuponesActivos)
+        recyclerView = findViewById(R.id.recyclerUsuariosPuntos)
+        txtTotalUsuarios = findViewById(R.id.txtTotalUsuarios)
+        txtPuntosTotal = findViewById(R.id.txtPuntosTotal)
     }
 
     private fun setupRecyclerView() {
-        // ⬇️ Si tu adapter necesita Context, pásalo como primer parámetro:
-        cuponesAdapter = CuponesAdapter(this, cuponesList) { cupon ->
-            btnEliminarCupon.isEnabled = true
-        }
+        usuariosAdapter = UsuariosPuntosAdapter(this, usuariosList)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = cuponesAdapter
+        recyclerView.adapter = usuariosAdapter
     }
 
-    private fun loadCupones() {
-        db.collection("cupones")
-            .get()
-            .addOnSuccessListener { documents ->
-                cuponesList.clear()
-                for (document in documents) {
-                    val cupon = document.toObject(Cupon::class.java)
-                    cupon.id = document.id
-                    cuponesList.add(cupon)
-                }
-                cuponesAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error al cargar cupones: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun loadEstadisticas() {
-        db.collection("cupones").get()
-            .addOnSuccessListener { documents ->
-                val total = documents.size()
-                var activos = 0
-
-                for (document in documents) {
-                    val activo = document.getBoolean("activo") ?: true
-                    if (activo) activos++
+    private fun loadUsuariosConPuntos() {
+        db.collection("users")
+            .addSnapshotListener { snapshots, error ->
+                if (error != null) {
+                    Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
                 }
 
-                txtTotalCupones.text = "Total: $total"
-                txtCuponesActivos.text = "Activos: $activos"
+                usuariosList.clear()
+                var puntosTotal = 0
+
+                snapshots?.documents?.forEach { doc ->
+                    val usuario = Usuario(
+                        id = doc.id,
+                        nombre = doc.getString("nombre") ?: "Sin nombre",
+                        email = doc.getString("email") ?: "",
+                        puntos = doc.getLong("points")?.toInt() ?: 0
+                    )
+                    usuariosList.add(usuario)
+                    puntosTotal += usuario.puntos
+                }
+
+                txtTotalUsuarios.text = "Total Usuarios: ${usuariosList.size}"
+                txtPuntosTotal.text = "Puntos Totales: $puntosTotal"
+                usuariosAdapter.notifyDataSetChanged()
             }
-    }
-
-    private fun crearCupon() {
-        val codigo = etCodigoCupon.text.toString().trim()
-        val descuentoStr = etDescuentoPorcentaje.text.toString().trim()
-        val descripcion = etDescripcion.text.toString().trim()
-
-        if (codigo.isEmpty() || descuentoStr.isEmpty() || descripcion.isEmpty()) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val descuento = descuentoStr.toDoubleOrNull()
-        if (descuento == null || descuento <= 0 || descuento > 100) {
-            Toast.makeText(this, "El descuento debe ser entre 1 y 100", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val cupon = hashMapOf(
-            "codigo" to codigo.uppercase(),
-            "descuentoPorcentaje" to descuento,
-            "descripcion" to descripcion,
-            "activo" to true,
-            "fechaCreacion" to com.google.firebase.Timestamp.now(),
-            "usos" to 0
-        )
-
-        db.collection("cupones")
-            .add(cupon)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Cupón creado exitosamente", Toast.LENGTH_SHORT).show()
-                limpiarCampos()
-                loadCupones()
-                loadEstadisticas()
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error al crear cupón: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun eliminarCupon() {
-        val cuponSeleccionado = cuponesAdapter.getSelectedCupon()
-        if (cuponSeleccionado == null) {
-            Toast.makeText(this, "Selecciona un cupón primero", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        db.collection("cupones").document(cuponSeleccionado.id)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Cupón eliminado exitosamente", Toast.LENGTH_SHORT).show()
-                loadCupones()
-                loadEstadisticas()
-                btnEliminarCupon.isEnabled = false
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error al eliminar cupón: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun limpiarCampos() {
-        etCodigoCupon.text.clear()
-        etDescuentoPorcentaje.text.clear()
-        etDescripcion.text.clear()
     }
 }

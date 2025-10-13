@@ -21,8 +21,7 @@
             android:contentDescription="Medical Icon"
             android:src="@drawable/robot" />
 
-
-        <!-- Contenedor para el campo de usuario y el icono de búsqueda -->
+        Contenedor para el campo de usuario y el icono de búsqueda
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -32,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_edittext"
-                android:hint="Ingresa tu usuario"
+                android:hint="Correo o número de celular"
                 android:padding="12dp"
                 android:textColor="@android:color/white"
                 android:textColorHint="#B0B0B0"
@@ -50,7 +49,7 @@
                 android:contentDescription="Buscar usuario" />
         </RelativeLayout>
 
-        <!-- Contenedor para el campo de contraseña y el icono del ojo -->
+        Contenedor para el campo de contraseña y el icono del ojo
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,13 +90,15 @@
             android:textAllCaps="false"
             android:textColor="@android:color/black" />
 
+        Botones del mismo tamaño y mejor diseño
         <Button
             android:id="@+id/login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/rounded_button"
-            android:text="LOG IN"
+            android:backgroundTint="#1976D2"
+            android:text="INICIAR SESIÓN"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -106,31 +107,29 @@
         <Button
             android:id="@+id/registro"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/rounded_button"
             android:backgroundTint="#4CAF50"
-            android:text="REGISTER"
+            android:text="REGISTRARSE"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
             android:elevation="4dp" />
 
-        <!-- Mejorando diseño del botón de acceso administradores -->
         <Button
             android:id="@+id/btnAccesoAdmin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/rounded_button"
             android:backgroundTint="#1A237E"
-            android:text="🔐 Acceso Administradores"
+            android:text="🔐 ACCESO ADMINISTRADORES"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:elevation="2dp"
-            android:paddingHorizontal="16dp" />
+            android:elevation="4dp" />
 
     </LinearLayout>
 

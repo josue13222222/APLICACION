@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var login: Button
     private lateinit var registro: Button
     private lateinit var olvidoContrasena: TextView
-    private lateinit var btnFacebook: ImageButton
     private lateinit var logoImage: ImageView
     private lateinit var btnAccesoAdmin: Button
 
@@ -62,21 +61,24 @@ class MainActivity : AppCompatActivity() {
         login.setOnClickListener {
             val usuarioTexto = usuario.text.toString().trim()
             val passwordTexto = contrasena.text.toString().trim()
-            if (!validarEmail(usuarioTexto) || passwordTexto.length < 6) {
-                Toast.makeText(this, "Correo inválido o contraseña muy corta", Toast.LENGTH_SHORT).show()
+
+            if (usuarioTexto.isEmpty() || passwordTexto.isEmpty()) {
+                Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            loginUser(usuarioTexto, passwordTexto)
+
+            if (Patterns.EMAIL_ADDRESS.matcher(usuarioTexto).matches()) {
+                // Login con correo
+                loginUser(usuarioTexto, passwordTexto)
+            } else {
+                // Login con celular - buscar el correo asociado
+                buscarCorreoPorCelular(usuarioTexto, passwordTexto)
+            }
         }
 
         registro.setOnClickListener {
-            val email = usuario.text.toString().trim()
-            val password = contrasena.text.toString().trim()
-            if (!validarEmail(email) || password.length < 6) {
-                Toast.makeText(this, "Correo inválido o contraseña muy corta", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            registrarUsuario(email, password)
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         olvidoContrasena.setOnClickListener {
@@ -103,6 +105,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun buscarCorreoPorCelular(celular: String, password: String) {
+        firestore.collection("usuarios")
+            .whereEqualTo("celular", celular)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val email = documents.documents[0].getString("email")
+                    if (email != null) {
+                        loginUser(email, password)
+                    } else {
+                        Toast.makeText(this, "No se encontró el correo asociado", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "No se encontró usuario con ese número de celular", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al buscar usuario", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun iniciarAnimacionLatido() {
         val scaleX = ObjectAnimator.ofFloat(logoImage, "scaleX", 1.0f, 1.2f, 1.0f)
         val scaleY = ObjectAnimator.ofFloat(logoImage, "scaleY", 1.0f, 1.2f, 1.0f)
@@ -114,43 +137,6 @@ class MainActivity : AppCompatActivity() {
         scaleY.repeatMode = ValueAnimator.REVERSE
         scaleX.start()
         scaleY.start()
-    }
-
-    private fun registrarUsuario(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val userId = auth.currentUser?.uid
-                    if (userId != null) {
-                        val usuarioData = mapOf(
-                            "email" to email,
-                            "telefono" to "123456789"
-                        )
-                        database.child(userId).setValue(usuarioData)
-                            .addOnSuccessListener {
-                                val firestoreData = hashMapOf(
-                                    "email" to email,
-                                    "telefono" to "123456789",
-                                    "puntos" to 0
-                                )
-                                firestore.collection("usuarios").document(userId).set(firestoreData)
-                                    .addOnSuccessListener {
-                                        Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show()
-                                        guardarCorreo(email)
-                                        abrirBienvenida()
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(this, "Error en Firestore", Toast.LENGTH_SHORT).show()
-                                    }
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "Error en Realtime DB", Toast.LENGTH_SHORT).show()
-                            }
-                    }
-                } else {
-                    Toast.makeText(this, "Error al registrar: ${task.exception?.localizedMessage}", Toast.LENGTH_LONG).show()
-                }
-            }
     }
 
     private fun loginUser(email: String, password: String) {
@@ -180,10 +166,6 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, BienvenidaActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-    private fun validarEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun actualizarVisibilidadContrasena() {

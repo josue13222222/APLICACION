@@ -60,6 +60,9 @@ class BienvenidaActivity : AppCompatActivity() {
             startActivity(Intent(this, ServicioTecnicoActivity::class.java))
         }
 
+        btnMas.setOnClickListener {
+            startActivity(Intent(this, RobotIAActivity::class.java))
+        }
 
         btnEmpenosActivity.setOnClickListener {
             startActivity(Intent(this, EmpenosActivity::class.java))

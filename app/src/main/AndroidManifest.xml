@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myapplication">
 
-    <!-- 📌 Permisos necesarios -->
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -11,7 +11,11 @@
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <!-- 📌 Declaración de características del dispositivo -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -27,16 +31,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
 
-        <!-- 📌 Pantalla de Empeños -->
+        📌 Pantalla de Empeños
         <activity
             android:name=".EmpenosActivity"
             android:exported="false"
             android:label="@string/title_activity_empenos"
             android:theme="@style/Theme.AppCompat" />
 
-        <!-- 📌 FileProvider para compartir imágenes con cámara -->
+        📌 FileProvider para compartir imágenes con cámara
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -47,7 +52,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- 📌 Lista de actividades -->
+        📌 Lista de actividades
         <activity
             android:name=".CuponesActivity"
             android:exported="false" />
@@ -111,7 +116,7 @@
 
         <activity android:name=".MisPuntosActivity" />
 
-        <!-- Agregando actividades de administrador -->
+        Agregando actividades de administrador
         <activity android:name=".AdminLoginActivity"
             android:exported="false" />
         <activity android:name=".AdminDashboardActivity"
@@ -127,20 +132,25 @@
         <activity android:name=".AdminConfiguracionActivity"
             android:exported="false" />
 
-        <!-- Agregando actividades del sistema de pagos -->
+        Agregando actividades del sistema de pagos
         <activity android:name=".PagosActivity"
             android:exported="false" />
         <activity android:name=".AdminPagosActivity"
             android:exported="false" />
 
-        <!-- Agregando nuevas actividades de seguimiento de reparaciones -->
-        <activity android:name=".SeguimientoReparacionActivity"
-            android:exported="false" />
-        <activity android:name=".AdminOrdenesReparacionActivity"
-            android:exported="false" />
+        Agregando nuevas actividades de seguimiento de reparaciones
+
         <activity android:name=".RegistrarEmpenoActivity"
             android:exported="false" />
         <activity android:name=".VerEmpenosActivity"
+            android:exported="false" />
+
+        Agregando actividad del chatbot Robot IA
+        <activity android:name=".RobotIAActivity"
+            android:exported="false" />
+
+        Agregando actividad de registro de usuarios
+        <activity android:name=".RegisterActivity"
             android:exported="false" />
 
     </application>

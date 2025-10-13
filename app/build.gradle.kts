@@ -78,6 +78,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx") // Agregado Firebase Storage para subir fotos
 
     // Glide (para imágenes)
     implementation("com.github.bumptech.glide:glide:4.15.1")
@@ -85,4 +86,11 @@ dependencies {
 
     // Otros
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("androidx.cardview:cardview:1.0.0")
 }
