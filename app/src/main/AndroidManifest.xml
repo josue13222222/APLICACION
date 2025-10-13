@@ -139,7 +139,10 @@
             android:exported="false" />
 
         Agregando nuevas actividades de seguimiento de reparaciones
-
+        <activity android:name=".SeguimientoReparacionActivity"
+            android:exported="false" />
+        <activity android:name=".AdminOrdenesReparacionActivity"
+            android:exported="false" />
         <activity android:name=".RegistrarEmpenoActivity"
             android:exported="false" />
         <activity android:name=".VerEmpenosActivity"
