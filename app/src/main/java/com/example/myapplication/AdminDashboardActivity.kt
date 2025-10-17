@@ -103,6 +103,10 @@ class AdminDashboardActivity : AppCompatActivity() {
             startActivity(Intent(this, AdminPagosActivity::class.java))
         }
 
+        btnGestionReparaciones.setOnClickListener {
+            startActivity(Intent(this, AdminPanelActivity::class.java))
+        }
+
         // Cerrar sesión admin
         btnCerrarSesionAdmin.setOnClickListener {
             val sharedPreferences = getSharedPreferences("AdminLoginPrefs", MODE_PRIVATE)

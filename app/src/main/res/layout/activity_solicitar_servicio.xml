@@ -65,42 +65,78 @@
             android:inputType="textMultiLine"
             android:maxLines="6" />
 
-        <!-- Botones para agregar fotos -->
-        <Button
-            android:id="@+id/btnAgregarFotos"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Agregar fotos desde galería"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#1976D2"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            android:layout_marginBottom="12dp" />
+        Sección de fotos similar a empeños
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fotos del equipo"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:layout_marginBottom="16dp" />
 
-        <Button
-            android:id="@+id/btnTomarFoto"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Tomar foto con cámara"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#F57C00"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Contenedor dinámico para las imágenes seleccionadas -->
+        Foto 1
         <LinearLayout
-            android:id="@+id/contenedorImagenes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="16dp">
 
+            <Button
+                android:id="@+id/btnSeleccionarFoto1"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Seleccionar Foto 1"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#1976D2"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <ImageView
+                android:id="@+id/imgFoto1"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="#E0E0E0"
+                android:visibility="gone"
+                android:contentDescription="Foto 1 del equipo" />
+        </LinearLayout>
+
+        Foto 2
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="32dp">
+
+            <Button
+                android:id="@+id/btnSeleccionarFoto2"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Seleccionar Foto 2 (Opcional)"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#F57C00"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <ImageView
+                android:id="@+id/imgFoto2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="#E0E0E0"
+                android:visibility="gone"
+                android:contentDescription="Foto 2 del equipo" />
+        </LinearLayout>
+
+        Botón cambiado de WhatsApp a Registrar orden
         <Button
             android:id="@+id/btnEnviar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Enviar por WhatsApp"
+            android:text="Registrar Orden"
             android:textColor="@android:color/white"
             android:backgroundTint="#388E3C"
             android:textAllCaps="false"

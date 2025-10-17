@@ -1,19 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/fondo">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gestión de Reparaciones"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#2196F3"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/txtTotalOrdenes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Total: 0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="#E3F2FD"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_marginEnd="4dp" />
+
+        <TextView
+            android:id="@+id/txtOrdenesPendientes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pendientes: 0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="#FFF3E0"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_marginHorizontal="4dp" />
+
+        <TextView
+            android:id="@+id/txtOrdenesEnReparacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="En reparación: 0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="#BBDEFB"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_marginStart="4dp" />
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Órdenes de Servicio Técnico"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#FF5722"
+        android:layout_marginBottom="12dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        android:clipToPadding="false" />
-    <Button
-        android:id="@+id/btnActualizarEstado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Actualizar Estado" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:padding="8dp" />
 
 </LinearLayout>
