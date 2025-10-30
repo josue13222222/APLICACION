@@ -37,15 +37,7 @@
             android:background="@android:color/white"
             android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etValor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Valor estimado (S/)"
-            android:inputType="number"
-            android:padding="12dp"
-            android:background="@android:color/white"
-            android:layout_marginBottom="20dp"/>
+        <!-- Remover campo "Valor estimado" ya que solo el admin lo pone -->
 
         <!-- Sección de fotos -->
         <TextView

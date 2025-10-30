@@ -1,5 +1,8 @@
 package com.example.myapplication
 
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +10,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 
 class OrdenAdapter(
     private val listaOrdenes: List<OrdenServicio>,
@@ -57,25 +59,41 @@ class OrdenAdapter(
 
         if (orden.imagenes.isNotEmpty()) {
             // Primera imagen
-            if (orden.imagenes.size > 0) {
-                Glide.with(holder.itemView.context)
-                    .load(orden.imagenes[0])
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_menu_report_image)
-                    .into(holder.imgFoto1)
-                holder.imgFoto1.visibility = View.VISIBLE
+            if (orden.imagenes.size > 0 && orden.imagenes[0].isNotEmpty()) {
+                try {
+                    val decodedBytes = Base64.decode(orden.imagenes[0], Base64.DEFAULT)
+                    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                    holder.imgFoto1.setImageBitmap(bitmap)
+                    holder.imgFoto1.visibility = View.VISIBLE
+                    holder.imgFoto1.setOnClickListener {
+                        val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
+                        intent.putExtra("imagen_base64", orden.imagenes[0])
+                        holder.itemView.context.startActivity(intent)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    holder.imgFoto1.visibility = View.GONE
+                }
             } else {
                 holder.imgFoto1.visibility = View.GONE
             }
 
             // Segunda imagen
-            if (orden.imagenes.size > 1) {
-                Glide.with(holder.itemView.context)
-                    .load(orden.imagenes[1])
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_menu_report_image)
-                    .into(holder.imgFoto2)
-                holder.imgFoto2.visibility = View.VISIBLE
+            if (orden.imagenes.size > 1 && orden.imagenes[1].isNotEmpty()) {
+                try {
+                    val decodedBytes = Base64.decode(orden.imagenes[1], Base64.DEFAULT)
+                    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                    holder.imgFoto2.setImageBitmap(bitmap)
+                    holder.imgFoto2.visibility = View.VISIBLE
+                    holder.imgFoto2.setOnClickListener {
+                        val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
+                        intent.putExtra("imagen_base64", orden.imagenes[1])
+                        holder.itemView.context.startActivity(intent)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    holder.imgFoto2.visibility = View.GONE
+                }
             } else {
                 holder.imgFoto2.visibility = View.GONE
             }

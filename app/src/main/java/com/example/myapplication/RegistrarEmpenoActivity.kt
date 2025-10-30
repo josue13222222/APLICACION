@@ -37,7 +37,6 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
 
         val etProducto = findViewById<EditText>(R.id.etProducto)
         val spinnerEstado = findViewById<Spinner>(R.id.spinnerEstado)
-        val etValor = findViewById<EditText>(R.id.etValor)
         val btnRegistrar = findViewById<Button>(R.id.btnRegistrar)
 
         imgFoto1 = findViewById(R.id.imgFoto1)
@@ -61,9 +60,8 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
         btnRegistrar.setOnClickListener {
             val producto = etProducto.text.toString().trim()
             val estado = spinnerEstado.selectedItem.toString()
-            val valorStr = etValor.text.toString().trim()
 
-            if (producto.isEmpty() || valorStr.isEmpty()) {
+            if (producto.isEmpty()) {
                 Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -73,13 +71,6 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val valor = valorStr.toIntOrNull()
-            if (valor == null || valor <= 0) {
-                Toast.makeText(this, "Ingresa un valor válido", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val puntos = valor / 100
             val fecha = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val user = auth.currentUser
             if (user == null) {
@@ -88,7 +79,7 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
             }
             val uid = user.uid
 
-            registrarEmpenoConFotos(uid, producto, estado, valor, puntos, fecha)
+            registrarEmpenoConFotos(uid, producto, estado, 0, fecha)
         }
     }
 
@@ -114,7 +105,6 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
     private fun uriToBase64(uri: Uri): String {
         return try {
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-            // Redimensionar para no exceder límites de Firestore
             val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, true)
             val byteArrayOutputStream = ByteArrayOutputStream()
             resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream)
@@ -126,13 +116,12 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
         }
     }
 
-    private fun registrarEmpenoConFotos(uid: String, producto: String, estado: String, valor: Int, puntos: Int, fecha: String) {
+    private fun registrarEmpenoConFotos(uid: String, producto: String, estado: String, valor: Int, fecha: String) {
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Registrando empeño...")
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        // Convertir fotos a Base64
         val foto1Base64 = uriToBase64(foto1Uri!!)
         val foto2Base64 = if (foto2Uri != null) uriToBase64(foto2Uri!!) else ""
 
@@ -148,8 +137,8 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
             "id" to docRef.id,
             "producto" to producto,
             "estado" to estado,
-            "valor" to valor,
-            "puntos" to puntos,
+            "montoEmpenado" to 0,
+            "precioMensual" to 0,
             "fecha" to fecha,
             "userId" to uid,
             "foto1Url" to foto1Base64,
@@ -161,7 +150,7 @@ class RegistrarEmpenoActivity : AppCompatActivity() {
         docRef.set(empeno)
             .addOnSuccessListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "Empeño registrado. Espera la aprobación del administrador para recibir $puntos puntos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Empeño registrado. Espera la aprobación del administrador", Toast.LENGTH_LONG).show()
                 finish()
             }
             .addOnFailureListener { e ->

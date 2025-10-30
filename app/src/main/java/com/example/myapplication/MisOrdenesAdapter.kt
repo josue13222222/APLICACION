@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
@@ -32,7 +33,7 @@ class MisOrdenesAdapter(private val ordenes: List<OrdenServicio>) :
     override fun onBindViewHolder(holder: OrdenViewHolder, position: Int) {
         val orden = ordenes[position]
 
-        holder.tvOrdenId.text = "Orden: ${orden.id}"
+        holder.tvOrdenId.text = "Orden: ${orden.ordenId}"
         holder.tvEquipo.text = "Equipo: ${orden.equipo}"
         holder.tvEstado.text = "Estado: ${orden.estado}"
 
@@ -48,6 +49,11 @@ class MisOrdenesAdapter(private val ordenes: List<OrdenServicio>) :
                 val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
                 holder.imgFoto1.setImageBitmap(bitmap)
                 holder.imgFoto1.visibility = View.VISIBLE
+                holder.imgFoto1.setOnClickListener {
+                    val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
+                    intent.putExtra("imagen_base64", foto1Base64)
+                    holder.itemView.context.startActivity(intent)
+                }
             }
         }
 
@@ -58,6 +64,11 @@ class MisOrdenesAdapter(private val ordenes: List<OrdenServicio>) :
                 val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
                 holder.imgFoto2.setImageBitmap(bitmap)
                 holder.imgFoto2.visibility = View.VISIBLE
+                holder.imgFoto2.setOnClickListener {
+                    val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
+                    intent.putExtra("imagen_base64", foto2Base64)
+                    holder.itemView.context.startActivity(intent)
+                }
             }
         }
     }

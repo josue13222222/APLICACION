@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
@@ -21,7 +22,7 @@ class EmpenosPendientesAdapter(
     class VH(v: View) : RecyclerView.ViewHolder(v) {
         val txtProducto: TextView = v.findViewById(R.id.txtProductoEmpeno)
         val txtValor: TextView = v.findViewById(R.id.txtValorEmpeno)
-        val txtPuntos: TextView = v.findViewById(R.id.txtPuntosEmpeno)
+        val txtMontoEmpenado: TextView = v.findViewById(R.id.txtPuntosEmpeno)
         val txtEstado: TextView = v.findViewById(R.id.txtEstadoEmpeno)
         val txtFecha: TextView = v.findViewById(R.id.txtFechaEmpeno)
         val imgFoto1: ImageView = v.findViewById(R.id.imgFoto1Empeno)
@@ -39,8 +40,8 @@ class EmpenosPendientesAdapter(
         val empeno = items[position]
 
         holder.txtProducto.text = empeno.producto
-        holder.txtValor.text = "Valor: S/ ${empeno.valor}"
-        holder.txtPuntos.text = "Puntos a otorgar: ${empeno.puntos} (S/ ${empeno.puntos * 0.5})"
+        holder.txtValor.text = "Precio mensual: S/ ${empeno.precioMensual}"
+        holder.txtMontoEmpenado.text = "Empeñado por: S/ ${empeno.montoEmpenado}"
         holder.txtEstado.text = "Estado: ${empeno.estado}"
         holder.txtFecha.text = "Fecha: ${empeno.fecha}"
 
@@ -52,6 +53,11 @@ class EmpenosPendientesAdapter(
                 if (bitmap != null) {
                     holder.imgFoto1.setImageBitmap(bitmap)
                     holder.imgFoto1.visibility = View.VISIBLE
+                    holder.imgFoto1.setOnClickListener {
+                        val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
+                        intent.putExtra("imagen_base64", empeno.foto1Url)
+                        holder.itemView.context.startActivity(intent)
+                    }
                 } else {
                     holder.imgFoto1.visibility = View.GONE
                 }
@@ -71,6 +77,11 @@ class EmpenosPendientesAdapter(
                 if (bitmap != null) {
                     holder.imgFoto2.setImageBitmap(bitmap)
                     holder.imgFoto2.visibility = View.VISIBLE
+                    holder.imgFoto2.setOnClickListener {
+                        val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
+                        intent.putExtra("imagen_base64", empeno.foto2Url)
+                        holder.itemView.context.startActivity(intent)
+                    }
                 } else {
                     holder.imgFoto2.visibility = View.GONE
                 }
@@ -82,8 +93,11 @@ class EmpenosPendientesAdapter(
             holder.imgFoto2.visibility = View.GONE
         }
 
+        holder.btnAprobar.text = "🗑️ Eliminar"
+        holder.btnAprobar.setBackgroundColor(context.getColor(android.R.color.holo_red_light))
+        holder.btnRechazar.visibility = View.GONE
+
         holder.btnAprobar.setOnClickListener { onAprobar(empeno) }
-        holder.btnRechazar.setOnClickListener { onRechazar(empeno) }
     }
 
     override fun getItemCount() = items.size

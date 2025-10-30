@@ -1,12 +1,12 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminEmpenosActivity : AppCompatActivity() {
@@ -14,8 +14,8 @@ class AdminEmpenosActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
     private lateinit var txtTotalEmpenos: TextView
-    private lateinit var txtPendientes: TextView
-    private lateinit var txtAprobados: TextView
+    private lateinit var txtActivos: TextView
+    private lateinit var txtEliminados: TextView
 
     private var empenosList = mutableListOf<Empeno>()
     private lateinit var empenosAdapter: EmpenosPendientesAdapter
@@ -27,29 +27,35 @@ class AdminEmpenosActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         initViews()
         setupRecyclerView()
-        loadEmpenosPendientes()
+        loadEmpenosAprobados()
         loadEstadisticas()
     }
 
     private fun initViews() {
         recyclerView = findViewById(R.id.recyclerEmpenosPendientes)
         txtTotalEmpenos = findViewById(R.id.txtTotalEmpenos)
-        txtPendientes = findViewById(R.id.txtEmpenosPendientes)
-        txtAprobados = findViewById(R.id.txtEmpenosAprobados)
+        txtActivos = findViewById(R.id.txtEmpenosPendientes)
+        txtEliminados = findViewById(R.id.txtEmpenosAprobados)
+
+        val btnRegistrarEmpenoAdmin = findViewById<Button>(R.id.btnRegistrarEmpenoAdmin)
+        btnRegistrarEmpenoAdmin.setOnClickListener {
+            val intent = Intent(this, AdminRegistrarEmpenoActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {
         empenosAdapter = EmpenosPendientesAdapter(this, empenosList,
-            onAprobar = { empeno -> aprobarEmpeno(empeno) },
-            onRechazar = { empeno -> rechazarEmpeno(empeno) }
+            onAprobar = { empeno -> eliminarEmpeno(empeno) },
+            onRechazar = { empeno -> eliminarEmpeno(empeno) }
         )
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = empenosAdapter
     }
 
-    private fun loadEmpenosPendientes() {
+    private fun loadEmpenosAprobados() {
         db.collection("empenos")
-            .whereEqualTo("estadoAprobacion", "pendiente")
+            .whereEqualTo("estado", "activo")
             .addSnapshotListener { snapshots, error ->
                 if (error != null) {
                     Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
@@ -70,59 +76,32 @@ class AdminEmpenosActivity : AppCompatActivity() {
         db.collection("empenos").get()
             .addOnSuccessListener { documents ->
                 val total = documents.size()
-                var pendientes = 0
-                var aprobados = 0
+                var activos = 0
+                var eliminados = 0
 
                 for (document in documents) {
-                    when (document.getString("estadoAprobacion")) {
-                        "pendiente" -> pendientes++
-                        "aprobado" -> aprobados++
+                    when (document.getString("estado")) {
+                        "activo" -> activos++
+                        "eliminado" -> eliminados++
                     }
                 }
 
                 txtTotalEmpenos.text = "Total: $total"
-                txtPendientes.text = "Pendientes: $pendientes"
-                txtAprobados.text = "Aprobados: $aprobados"
+                txtActivos.text = "Activos: $activos"
+                txtEliminados.text = "Eliminados: $eliminados"
             }
     }
 
-    private fun aprobarEmpeno(empeno: Empeno) {
+    private fun eliminarEmpeno(empeno: Empeno) {
         AlertDialog.Builder(this)
-            .setTitle("Aprobar Empeño")
-            .setMessage("¿Aprobar empeño de ${empeno.producto}?\n\nSe otorgarán ${empeno.puntos} puntos al usuario.")
-            .setPositiveButton("Aprobar") { _, _ ->
+            .setTitle("Eliminar Empeño")
+            .setMessage("¿Eliminar empeño de ${empeno.producto}? Esta acción no se puede deshacer.")
+            .setPositiveButton("Eliminar") { _, _ ->
                 db.collection("empenos").document(empeno.id)
-                    .update("estadoAprobacion", "aprobado")
+                    .update("estado", "eliminado")
                     .addOnSuccessListener {
-                        db.collection("users").document(empeno.userId)
-                            .update("points", FieldValue.increment(empeno.puntos.toLong()))
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Empeño aprobado. ${empeno.puntos} puntos otorgados", Toast.LENGTH_SHORT).show()
-                                loadEmpenosPendientes()
-                                loadEstadisticas()
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(this, "Error otorgando puntos: ${e.message}", Toast.LENGTH_SHORT).show()
-                            }
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error aprobando empeño: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .setNegativeButton("Cancelar", null)
-            .show()
-    }
-
-    private fun rechazarEmpeno(empeno: Empeno) {
-        AlertDialog.Builder(this)
-            .setTitle("Rechazar Empeño")
-            .setMessage("¿Rechazar empeño de ${empeno.producto}?\n\nEl usuario NO recibirá puntos.")
-            .setPositiveButton("Rechazar") { _, _ ->
-                db.collection("empenos").document(empeno.id)
-                    .update("estadoAprobacion", "rechazado")
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Empeño rechazado", Toast.LENGTH_SHORT).show()
-                        loadEmpenosPendientes()
+                        Toast.makeText(this, "Empeño eliminado", Toast.LENGTH_SHORT).show()
+                        loadEmpenosAprobados()
                         loadEstadisticas()
                     }
                     .addOnFailureListener { e ->

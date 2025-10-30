@@ -4,27 +4,42 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class NotificacionesActivity : AppCompatActivity() {
+    private val db = Firebase.firestore
+    private val auth = Firebase.auth
+    private val notificaciones = mutableListOf<Notificacion>()
+    private lateinit var adapter: NotificacionesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notificaciones)
 
-        // Configuramos RecyclerView
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Creamos una lista de notificaciones simuladas
-        val notificaciones = mutableListOf(
-            Notificacion("Pedido entregado", "Tu pedido #123 ya llegó.", "Hoy, 9:05 AM"),
-            Notificacion("Nuevo cupón disponible", "¡Tienes un nuevo cupón para ti!", "Hoy, 10:00 AM"),
-            Notificacion("Actualización importante", "Tu cuenta ha sido actualizada.", "Ayer, 4:30 PM")
-        )
-
-        // Asociamos la lista con el RecyclerView usando un Adapter
-        val adapter = NotificacionesAdapter(notificaciones)
+        adapter = NotificacionesAdapter(notificaciones)
         recyclerView.adapter = adapter
+
+        val uid = auth.currentUser?.uid ?: return
+        cargarNotificaciones(uid)
+    }
+
+    private fun cargarNotificaciones(uid: String) {
+        db.collection("notificaciones")
+            .whereEqualTo("userId", uid)
+            .orderBy("fechaCreacion", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) return@addSnapshotListener
+
+                notificaciones.clear()
+                snapshot?.forEach { doc ->
+                    val notif = doc.toObject(Notificacion::class.java)
+                    notificaciones.add(notif)
+                }
+                adapter.notifyDataSetChanged()
+            }
     }
 }

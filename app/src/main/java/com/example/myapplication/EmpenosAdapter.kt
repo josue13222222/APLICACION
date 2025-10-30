@@ -4,8 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.graphics.BitmapFactory
+import android.util.Base64
 
 class EmpenosAdapter(
     private val context: Context,
@@ -17,8 +20,10 @@ class EmpenosAdapter(
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val tvProducto: TextView = view.findViewById(R.id.tvProducto)
-        val tvDetalle: TextView = view.findViewById(R.id.tvDetalle)
+        val tvMonto: TextView = view.findViewById(R.id.tvMonto)
+        val tvPrecioMensual: TextView = view.findViewById(R.id.tvPrecioMensual)
         val tvFecha: TextView = view.findViewById(R.id.tvFecha)
+        val imgProducto: ImageView = view.findViewById(R.id.imgProducto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -29,8 +34,19 @@ class EmpenosAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val e = items[position]
         holder.tvProducto.text = e.producto
-        holder.tvDetalle.text = "${e.estado} • S/${e.valor} • ${e.puntos} pts"
-        holder.tvFecha.text = e.fecha
+        holder.tvMonto.text = "Empeñado por: S/ ${e.montoEmpenado}"
+        holder.tvPrecioMensual.text = "Cobro mensual: S/ ${e.precioMensual}"
+        holder.tvFecha.text = "Desde: ${e.fecha}"
+
+        if (e.foto1Url.isNotEmpty()) {
+            try {
+                val decodedString = Base64.decode(e.foto1Url, Base64.NO_WRAP)
+                val bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                holder.imgProducto.setImageBitmap(bitmap)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
 
         holder.itemView.setOnClickListener {
             selectedPosition = position

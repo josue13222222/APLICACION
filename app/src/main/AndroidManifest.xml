@@ -132,6 +132,10 @@
         <activity android:name=".AdminConfiguracionActivity"
             android:exported="false" />
 
+        <!-- Agregando AdminRegistrarEmpenoActivity al manifest -->
+        <activity android:name=".AdminRegistrarEmpenoActivity"
+            android:exported="false" />
+
         Agregando actividades del sistema de pagos
         <activity android:name=".PagosActivity"
             android:exported="false" />

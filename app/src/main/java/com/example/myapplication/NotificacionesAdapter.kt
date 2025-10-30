@@ -19,6 +19,12 @@ class NotificacionesAdapter(private val notificaciones: List<Notificacion>) : Re
         holder.titulo.text = notificacion.titulo
         holder.descripcion.text = notificacion.descripcion
         holder.fecha.text = notificacion.fecha
+
+        if (!notificacion.leida) {
+            holder.itemView.setBackgroundColor(holder.itemView.context.getColor(android.R.color.holo_blue_light))
+        } else {
+            holder.itemView.setBackgroundColor(holder.itemView.context.getColor(android.R.color.white))
+        }
     }
 
     override fun getItemCount(): Int {

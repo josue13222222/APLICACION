@@ -87,14 +87,13 @@
             android:orientation="horizontal"
             android:layout_marginTop="12dp">
 
+            <!-- Cambiar a botón de eliminar -->
             <Button
                 android:id="@+id/btnAprobarEmpeno"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="✅ Aprobar"
-                android:backgroundTint="#4CAF50"
-                android:layout_marginEnd="8dp"/>
+                android:text="🗑️ Eliminar"
+                android:backgroundTint="#F44336"/>
 
             <Button
                 android:id="@+id/btnRechazarEmpeno"
@@ -102,7 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="❌ Rechazar"
-                android:backgroundTint="#F44336"/>
+                android:backgroundTint="#F44336"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -87,6 +87,10 @@ class AdminGestionReparacionesActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Toast.makeText(this, "Estado actualizado a: $nuevoEstado", Toast.LENGTH_SHORT).show()
                 Log.d("[v0]", "Estado actualizado exitosamente")
+
+                if (nuevoEstado == "Listo") {
+                    crearNotificacionReparacion(orden)
+                }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al actualizar estado", Toast.LENGTH_SHORT).show()
@@ -116,6 +120,28 @@ class AdminGestionReparacionesActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al eliminar orden", Toast.LENGTH_SHORT).show()
                 Log.e("[v0]", "Error al eliminar orden: ${e.message}")
+            }
+    }
+
+    private fun crearNotificacionReparacion(orden: OrdenServicio) {
+        val notificacion = hashMapOf(
+            "titulo" to "Reparación Lista",
+            "descripcion" to "Tu reparación de ${orden.equipo} está lista para recoger",
+            "fecha" to java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault()).format(java.util.Date()),
+            "userId" to orden.userId,
+            "tipo" to "reparacion",
+            "referenceId" to orden.id,
+            "leida" to false,
+            "fechaCreacion" to com.google.firebase.Timestamp.now()
+        )
+
+        db.collection("notificaciones").document()
+            .set(notificacion)
+            .addOnSuccessListener {
+                Log.d("[v0]", "Notificación de reparación creada para usuario: ${orden.userId}")
+            }
+            .addOnFailureListener { e ->
+                Log.e("[v0]", "Error creando notificación: ${e.message}")
             }
     }
 }

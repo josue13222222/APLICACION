@@ -9,5 +9,6 @@ data class OrdenServicio(
     val estado: String = "Pendiente",
     val timestamp: Long = 0L,
     val imagenes: List<String> = emptyList(),
-    val userId: String = ""
+    val userId: String = "",
+    val ordenId: String = ""
 )

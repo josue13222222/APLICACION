@@ -3,26 +3,49 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/border_item">
+
+    <ImageView
+        android:id="@+id/imgProducto"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/tvProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Producto"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
 
     <TextView
-        android:id="@+id/tvDetalle"
+        android:id="@+id/tvMonto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Estado • Valor • Puntos" />
+        android:text="Empeñado por: S/ 0"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/tvPrecioMensual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cobro mensual: S/ 0"
+        android:textSize="14sp"
+        android:textColor="#E74C3C"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:id="@+id/tvFecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fecha"
+        android:text="Desde: 2024-01-01"
         android:textSize="12sp"
-        android:textColor="#666"/>
+        android:textColor="#666" />
 </LinearLayout>

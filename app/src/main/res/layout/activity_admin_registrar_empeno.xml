@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Título -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Registrar Empeño"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Cambiar de Email a Teléfono del Cliente -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Teléfono del Cliente"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etCliente"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Ej: 3001234567"
+                android:inputType="phone"
+                android:padding="12dp"
+                android:background="@drawable/border_item"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Nombre del Producto -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Producto"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etProducto"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Ej: Laptop, Celular, etc."
+                android:padding="12dp"
+                android:background="@drawable/border_item"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Monto Empeñado -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Monto Empeñado"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etMontoEmpenado"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Ingrese el monto"
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:background="@drawable/border_item"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Precio Mensual (Automático 20%) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio Mensual (20%)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etPrecioMensual"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Se calcula automáticamente"
+                android:inputType="none"
+                android:focusable="false"
+                android:padding="12dp"
+                android:background="@drawable/border_item"
+                android:layout_marginBottom="16dp"
+                android:textColor="@android:color/darker_gray" />
+
+            <!-- Foto 1 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Foto 1 del Producto"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnSeleccionarFoto1"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Seleccionar Foto 1"
+                android:background="@android:color/holo_blue_light"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Cambiar ID de ivFoto1 a imgFoto1 para que coincida con el código -->
+            <ImageView
+                android:id="@+id/imgFoto1"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+            <!-- Foto 2 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Foto 2 del Producto"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnSeleccionarFoto2"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Seleccionar Foto 2"
+                android:background="@android:color/holo_blue_light"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Cambiar ID de ivFoto2 a imgFoto2 para que coincida con el código -->
+            <ImageView
+                android:id="@+id/imgFoto2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Botón Registrar -->
+    <Button
+        android:id="@+id/btnRegistrar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Registrar Empeño"
+        android:background="@android:color/holo_green_light"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+</LinearLayout>

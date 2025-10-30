@@ -42,23 +42,32 @@ class MisComprasActivity : AppCompatActivity() {
 
         db.collection("ordenes_reparacion")
             .whereEqualTo("userId", user.uid)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { documents ->
                 listaOrdenes.clear()
                 for (doc in documents) {
-                    val orden = doc.toObject(OrdenServicio::class.java)
-                    orden.id = doc.id
-                    listaOrdenes.add(orden)
+                    try {
+                        val orden = doc.toObject(OrdenServicio::class.java)
+                        val ordenActualizada = orden.copy(
+                            id = if (orden.id.isEmpty()) doc.id else orden.id,
+                            ordenId = if (orden.ordenId.isEmpty()) doc.id else orden.ordenId
+                        )
+                        listaOrdenes.add(ordenActualizada)
+                        println("[v0] Orden cargada: ${ordenActualizada.ordenId} - ${ordenActualizada.equipo}")
+                    } catch (e: Exception) {
+                        println("[v0] Error al deserializar orden: ${e.message}")
+                    }
                 }
+                listaOrdenes.sortByDescending { it.timestamp }
                 adapter.notifyDataSetChanged()
 
                 if (listaOrdenes.isEmpty()) {
                     Toast.makeText(this, "No tienes órdenes registradas", Toast.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Error al cargar órdenes", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { error ->
+                println("[v0] Error al cargar órdenes: ${error.message}")
+                Toast.makeText(this, "Error al cargar órdenes: ${error.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

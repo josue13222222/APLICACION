@@ -163,11 +163,13 @@ class SolicitarServicioActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 progressDialog.dismiss()
                 Toast.makeText(this, "Orden registrada exitosamente: $ordenId", Toast.LENGTH_LONG).show()
+                println("[v0] Orden guardada en Firebase: $ordenId")
                 finish()
             }
-            .addOnFailureListener {
+            .addOnFailureListener { error ->
                 progressDialog.dismiss()
-                Toast.makeText(this, "Error al registrar orden", Toast.LENGTH_SHORT).show()
+                println("[v0] Error al guardar orden: ${error.message}")
+                Toast.makeText(this, "Error al registrar orden: ${error.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

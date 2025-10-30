@@ -5,6 +5,43 @@
     android:orientation="vertical"
     android:padding="12dp">
 
+    <!-- Agregar campo de entrada de teléfono y botón de búsqueda -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingresa tu número de teléfono"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etTelefonoUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Ej: 3001234567"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:background="@drawable/border_item"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnBuscarEmpenos"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Buscar Mis Empeños"
+            android:background="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,4 +54,5 @@
         android:id="@+id/rvEmpenos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </LinearLayout>
