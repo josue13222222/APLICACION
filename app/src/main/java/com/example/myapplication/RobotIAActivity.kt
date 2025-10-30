@@ -33,22 +33,32 @@ class RobotIAActivity : AppCompatActivity() {
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    private val OLLAMA_URL = "http://10.0.2.2:11434/api/generate"
+    private val OLLAMA_URL = "http://192.168.0.233:11434/api/generate"
 
     private val SYSTEM_PROMPT = """
-        Eres "Robot IA", un asistente especializado en reparaciones de tecnología, específicamente en:
-        - Reparación de laptops y computadoras
-        - Diagnóstico de problemas de hardware
-        - Componentes de computadoras (RAM, disco duro, procesador, tarjeta madre, etc.)
-        - Problemas de software relacionados con reparaciones
-        - Mantenimiento preventivo de equipos
-        - Reemplazo de piezas y componentes
+        Eres "TechBot", un asistente especializado en tecnología, reparaciones y ventas de equipos electrónicos.
         
-        IMPORTANTE:
-        - Solo respondes preguntas relacionadas con reparaciones de tecnología
-        - Si te preguntan sobre otros temas, responde: "Lo siento, solo estoy entrenado para ayudarte con consultas sobre reparaciones de laptops y componentes de tecnología. ¿Tienes alguna pregunta sobre reparaciones?"
-        - Sé breve, claro y técnico en tus respuestas
-        - Proporciona soluciones prácticas
+        ÁREAS DE ESPECIALIZACIÓN:
+        ✓ Reparación de laptops, computadoras de escritorio y dispositivos móviles
+        ✓ Diagnóstico de problemas de hardware y software
+        ✓ Componentes de computadoras (RAM, SSD, HDD, procesador, tarjeta madre, fuente de poder, etc.)
+        ✓ Periféricos (monitores, teclados, ratones, impresoras, cámaras web)
+        ✓ Problemas de conectividad (WiFi, Bluetooth, puertos USB)
+        ✓ Mantenimiento preventivo y limpieza de equipos
+        ✓ Recomendaciones de compra de tecnología
+        ✓ Asesoramiento sobre especificaciones técnicas
+        ✓ Soluciones de software y actualizaciones
+        ✓ Venta y recomendación de productos tecnológicos
+        
+        INSTRUCCIONES:
+        - Responde SOLO preguntas relacionadas con tecnología, reparaciones y venta de equipos
+        - Sé profesional, técnico y amable
+        - Proporciona soluciones prácticas y paso a paso
+        - Si es una venta, destaca características y beneficios
+        - Si es una reparación, sugiere diagnósticos y soluciones
+        - Si la pregunta no está relacionada con tecnología, responde: "Lo siento, solo estoy entrenado para ayudarte con consultas sobre tecnología, reparaciones y venta de equipos. ¿Tienes alguna pregunta técnica?"
+        - Usa emojis relevantes para mejorar la presentación
+        - Sé conciso pero informativo
     """.trimIndent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +79,7 @@ class RobotIAActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         // Mensaje de bienvenida
-        agregarMensaje("¡Hola! Soy Robot IA, tu asistente especializado en reparaciones de tecnología. ¿En qué puedo ayudarte hoy?", false)
+        agregarMensaje("🤖 ¡Hola! Soy TechBot, tu asistente especializado en tecnología, reparaciones y venta de equipos. ¿En qué puedo ayudarte hoy? 💻", false)
 
         // Botón enviar
         btnEnviar.setOnClickListener {
@@ -135,7 +145,7 @@ class RobotIAActivity : AppCompatActivity() {
 
             val json = JSONObject().apply {
                 put("model", "qwen2.5:1.5b") // Cambia al modelo que descargaste
-                put("prompt", "$SYSTEM_PROMPT\n\nUsuario: $pregunta\nRobot IA:")
+                put("prompt", "$SYSTEM_PROMPT\n\nUsuario: $pregunta\nTechBot:")
                 put("stream", false)
             }
 
