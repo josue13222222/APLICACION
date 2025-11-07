@@ -4,8 +4,10 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.app.AlertDialog
 
 class AdminDashboardActivity : AppCompatActivity() {
 
@@ -29,15 +32,12 @@ class AdminDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_dashboard)
 
-        // Inicializar Firebase
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // Referencias a vistas
         tvBienvenidaAdmin = findViewById(R.id.textoBienvenidaAdmin)
         tvEstadisticas = findViewById(R.id.textoEstadisticas)
 
-        // Mostrar datos del administrador
         auth.currentUser?.let { currentUser ->
             val uid = currentUser.uid
             firestore.collection("usuarios").document(uid).get()
@@ -56,10 +56,8 @@ class AdminDashboardActivity : AppCompatActivity() {
             tvBienvenidaAdmin.text = "¡Bienvenido Administrador!"
         }
 
-        // Cargar estadísticas básicas
         cargarEstadisticas()
 
-        // Botones del panel admin
         val btnGestionUsuarios = findViewById<Button>(R.id.btnGestionUsuarios)
         val btnGestionEmpenos = findViewById<Button>(R.id.btnGestionEmpenos)
         val btnGestionCupones = findViewById<Button>(R.id.btnGestionCupones)
@@ -70,7 +68,6 @@ class AdminDashboardActivity : AppCompatActivity() {
         val btnGestionPagos = findViewById<Button>(R.id.btnGestionPagos)
         val btnGestionReparaciones = findViewById<Button>(R.id.btnGestionReparaciones)
 
-        // Funcionalidad de botones
         btnGestionUsuarios.setOnClickListener {
             startActivity(Intent(this, AdminUsuariosActivity::class.java))
         }
@@ -104,43 +101,191 @@ class AdminDashboardActivity : AppCompatActivity() {
         }
 
         btnGestionReparaciones.setOnClickListener {
-            startActivity(Intent(this, AdminPanelActivity::class.java))
+            startActivity(Intent(this, AdminGestionReparacionesActivity::class.java))
         }
 
-        // Cerrar sesión admin
         btnCerrarSesionAdmin.setOnClickListener {
-            val sharedPreferences = getSharedPreferences("AdminLoginPrefs", MODE_PRIVATE)
-            with(sharedPreferences.edit()) {
-                putBoolean("IS_ADMIN_LOGGED_IN", false)
-                apply()
-            }
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            auth.signOut()
+            startActivity(Intent(this, AdminLoginActivity::class.java))
             finish()
         }
     }
 
+    private fun cargarEstadisticas() {
+        firestore.collection("usuarios").get()
+            .addOnSuccessListener { usuariosSnapshot ->
+                firestore.collection("ordenes_reparacion").get()
+                    .addOnSuccessListener { ordenesSnapshot ->
+                        firestore.collection("empenos").get()
+                            .addOnSuccessListener { empenosSnapshot ->
+                                val estadisticas = """
+                                    Usuarios Registrados: ${usuariosSnapshot.size()}
+                                    Órdenes de Servicio: ${ordenesSnapshot.size()}
+                                    Empeños Activos: ${empenosSnapshot.size()}
+                                """.trimIndent()
+                                tvEstadisticas.text = estadisticas
+                            }
+                    }
+            }
+    }
+
     private fun checkCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun solicitarPermisoCamera() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.CAMERA),
+            CAMERA_PERMISSION_CODE
+        )
     }
 
     private fun abrirCamara() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, CAMERA_REQUEST_CODE)
-        } else {
-            Toast.makeText(this, "No se puede acceder a la cámara", Toast.LENGTH_SHORT).show()
+        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            val bitmap = data?.getParcelableExtra<Bitmap>("data")
+            if (bitmap != null) {
+                reconocerLaptop(bitmap)
+            }
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    private fun reconocerLaptop(fotoCaptured: Bitmap) {
+        Toast.makeText(this, "Analizando equipo...", Toast.LENGTH_SHORT).show()
+
+        firestore.collection("ordenes_reparacion").get()
+            .addOnSuccessListener { snapshot ->
+                println("[v0] Total de documentos: ${snapshot.size()}")
+
+                var mejorCoincidencia: Pair<String, Float>? = null
+                var mejorCliente = ""
+
+                for (document in snapshot.documents) {
+                    val nombreCliente = document.getString("nombre") ?: "Desconocido"
+                    val imagenesArray = document.get("imagenes") as? List<String>
+
+                    println("[v0] Cliente: $nombreCliente, Imágenes encontradas: ${imagenesArray?.size ?: 0}")
+
+                    if (imagenesArray != null && imagenesArray.isNotEmpty()) {
+                        for ((index, imagenBase64) in imagenesArray.withIndex()) {
+                            if (imagenBase64.isNotEmpty()) {
+                                try {
+                                    val confianza = compararImagenesAvanzado(fotoCaptured, imagenBase64)
+                                    println("[v0] Cliente: $nombreCliente, Imagen $index - Confianza: $confianza")
+
+                                    if (mejorCoincidencia == null || confianza > mejorCoincidencia.second) {
+                                        mejorCoincidencia = Pair(nombreCliente, confianza)
+                                        mejorCliente = nombreCliente
+                                    }
+                                } catch (e: Exception) {
+                                    println("[v0] Error comparando imagen: ${e.message}")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                println("[v0] Mejor coincidencia: ${mejorCoincidencia?.first} con confianza ${mejorCoincidencia?.second}")
+
+                if (mejorCoincidencia != null && mejorCoincidencia.second > 0.50f) {
+                    mostrarDialogoExito(mejorCliente)
+                } else {
+                    mostrarDialogoError()
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("[v0] Error al cargar datos: ${exception.message}")
+                Toast.makeText(this, "Error al cargar datos: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun compararImagenesAvanzado(bitmap1: Bitmap, imagenBase64: String): Float {
+        return try {
+            val decodedBytes = Base64.decode(imagenBase64, Base64.DEFAULT)
+            val bitmap2 = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+
+            val width = 100
+            val height = 100
+            val resized1 = Bitmap.createScaledBitmap(bitmap1, width, height, true)
+            val resized2 = Bitmap.createScaledBitmap(bitmap2, width, height, true)
+
+            var pixelesIguales = 0
+            val pixeles1 = IntArray(width * height)
+            val pixeles2 = IntArray(width * height)
+
+            resized1.getPixels(pixeles1, 0, width, 0, 0, width, height)
+            resized2.getPixels(pixeles2, 0, width, 0, 0, width, height)
+
+            for (i in pixeles1.indices) {
+                val r1 = (pixeles1[i] shr 16) and 0xFF
+                val g1 = (pixeles1[i] shr 8) and 0xFF
+                val b1 = pixeles1[i] and 0xFF
+
+                val r2 = (pixeles2[i] shr 16) and 0xFF
+                val g2 = (pixeles2[i] shr 8) and 0xFF
+                val b2 = pixeles2[i] and 0xFF
+
+                // Considerar píxeles similares si la diferencia es menor a 30
+                if (Math.abs(r1 - r2) < 30 && Math.abs(g1 - g2) < 30 && Math.abs(b1 - b2) < 30) {
+                    pixelesIguales++
+                }
+            }
+
+            val similitud = pixelesIguales.toFloat() / (width * height)
+            println("[v0] Similitud calculada: $similitud")
+            similitud
+        } catch (e: Exception) {
+            println("[v0] Error en comparación: ${e.message}")
+            0f
+        }
+    }
+
+    private fun mostrarDialogoExito(cliente: String) {
+        val mensaje = "Este equipo pertenece a:\n\n$cliente"
+
+        AlertDialog.Builder(this)
+            .setTitle("✓ EQUIPO IDENTIFICADO")
+            .setMessage(mensaje)
+            .setPositiveButton("ACEPTAR") { _, _ ->
+                Toast.makeText(this, "✓ Equipo de $cliente confirmado", Toast.LENGTH_SHORT).show()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun mostrarDialogoError() {
+        AlertDialog.Builder(this)
+            .setTitle("⚠️ EQUIPO NO REGISTRADO")
+            .setMessage("El equipo capturado no está registrado en el sistema.\n\nIntente nuevamente con un enfoque diferente.")
+            .setPositiveButton("REINTENTAR") { _, _ ->
+                if (checkCameraPermission()) {
+                    abrirCamara()
+                } else {
+                    solicitarPermisoCamera()
+                }
+            }
+            .setNegativeButton("CANCELAR") { _, _ -> }
+            .setCancelable(false)
+            .show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 abrirCamara()
@@ -148,81 +293,5 @@ class AdminDashboardActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as? Bitmap
-            imageBitmap?.let {
-                procesarImagenConIA(it)
-            }
-        }
-    }
-
-    private fun procesarImagenConIA(bitmap: Bitmap) {
-        Toast.makeText(this, "🤖 IA Analizando imagen...", Toast.LENGTH_SHORT).show()
-
-        // Simular procesamiento de IA (en una implementación real usarías una API de IA)
-        val laptopModels = arrayOf(
-            "Dell Inspiron 15", "HP Pavilion", "Lenovo ThinkPad",
-            "MacBook Air", "ASUS VivoBook", "Acer Aspire"
-        )
-
-        // Simular resultado aleatorio
-        val modeloDetectado = laptopModels.random()
-        val confianza = (85..98).random()
-
-        // Mostrar resultado
-        val mensaje = "🔍 Laptop detectada:\n" +
-                "Modelo: $modeloDetectado\n" +
-                "Confianza: $confianza%\n" +
-                "Estado: Listo para servicio técnico"
-
-        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
-
-        // Aquí podrías guardar el resultado en Firebase o mostrar en una nueva actividad
-    }
-
-    private fun cargarEstadisticas() {
-        // Contar usuarios totales
-        firestore.collection("usuarios")
-            .whereEqualTo("isAdmin", false)
-            .get()
-            .addOnSuccessListener { documents ->
-                val totalUsuarios = documents.size()
-
-                firestore.collection("ordenes_reparacion")
-                    .get()
-                    .addOnSuccessListener { reparacionesDoc ->
-                        val totalReparaciones = reparacionesDoc.size()
-                        val reparacionesActivas = reparacionesDoc.documents.count {
-                            val estado = it.getString("estado")
-                            estado != "Entregado"
-                        }
-
-                        // Contar empeños activos
-                        firestore.collection("empenos")
-                            .whereEqualTo("estado", "Aprobado")
-                            .get()
-                            .addOnSuccessListener { empeñosDoc ->
-                                val totalEmpeños = empeñosDoc.size()
-
-                                tvEstadisticas.text = "Usuarios: $totalUsuarios\n" +
-                                        "Empeños activos: $totalEmpeños\n" +
-                                        "Reparaciones activas: $reparacionesActivas/$totalReparaciones"
-                            }
-                            .addOnFailureListener {
-                                tvEstadisticas.text = "Usuarios: $totalUsuarios\n" +
-                                        "Reparaciones activas: $reparacionesActivas/$totalReparaciones"
-                            }
-                    }
-                    .addOnFailureListener {
-                        tvEstadisticas.text = "Usuarios registrados: $totalUsuarios\nEstadísticas no disponibles"
-                    }
-            }
-            .addOnFailureListener {
-                tvEstadisticas.text = "Estadísticas no disponibles"
-            }
     }
 }

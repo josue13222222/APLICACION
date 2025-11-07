@@ -14,18 +14,18 @@ class PagosActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var spinnerServicio: Spinner
     private lateinit var etMonto: EditText
-    private lateinit var etDescripcion: EditText
-    private lateinit var etReferencia: EditText
     private lateinit var cardYape: CardView
     private lateinit var cardPlin: CardView
-    private lateinit var cardBCP: CardView
     private lateinit var btnPagar: Button
-    private lateinit var tvNumeroContacto: TextView
-    private lateinit var tvCuentaBCP: TextView
+    private lateinit var ivQR: ImageView
 
     private var metodoPagoSeleccionado = ""
+    private var montoActual = 0.0
+    private var usuarioActual = ""
+
+    private val numeroContacto = "975167294"
+    private val cuentaBCP = "36592395059088"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,82 +33,52 @@ class PagosActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
+        usuarioActual = auth.currentUser?.uid ?: ""
 
         initViews()
-        setupSpinner()
         setupMetodosPago()
         setupPagarButton()
     }
 
     private fun initViews() {
-        spinnerServicio = findViewById(R.id.spinnerServicio)
         etMonto = findViewById(R.id.etMonto)
-        etDescripcion = findViewById(R.id.etDescripcion)
-        etReferencia = findViewById(R.id.etReferencia)
         cardYape = findViewById(R.id.cardYape)
         cardPlin = findViewById(R.id.cardPlin)
-        cardBCP = findViewById(R.id.cardBCP)
         btnPagar = findViewById(R.id.btnPagar)
-        tvNumeroContacto = findViewById(R.id.tvNumeroContacto)
-        tvCuentaBCP = findViewById(R.id.tvCuentaBCP)
-    }
-
-    private fun setupSpinner() {
-        val servicios = arrayOf("Robot Rescate", "Robot Empeño")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, servicios)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerServicio.adapter = adapter
+        ivQR = findViewById(R.id.ivQR)
     }
 
     private fun setupMetodosPago() {
         cardYape.setOnClickListener {
             seleccionarMetodoPago("Yape", cardYape)
-            mostrarInformacionContacto()
         }
 
         cardPlin.setOnClickListener {
             seleccionarMetodoPago("Plin", cardPlin)
-            mostrarInformacionContacto()
-        }
-
-        cardBCP.setOnClickListener {
-            seleccionarMetodoPago("BCP", cardBCP)
-            mostrarInformacionBCP()
         }
     }
 
     private fun seleccionarMetodoPago(metodo: String, card: CardView) {
-        // Resetear todas las tarjetas
         cardYape.setCardBackgroundColor(getColor(R.color.card_background))
         cardPlin.setCardBackgroundColor(getColor(R.color.card_background))
-        cardBCP.setCardBackgroundColor(getColor(R.color.card_background))
 
-        // Seleccionar la tarjeta actual
         card.setCardBackgroundColor(getColor(R.color.primary_color))
         metodoPagoSeleccionado = metodo
-    }
-
-    private fun mostrarInformacionContacto() {
-        tvNumeroContacto.text = "Número: 93419837"
-        tvCuentaBCP.text = ""
-    }
-
-    private fun mostrarInformacionBCP() {
-        tvCuentaBCP.text = "Cuenta BCP: 191-123456789-0-12"
-        tvNumeroContacto.text = ""
     }
 
     private fun setupPagarButton() {
         btnPagar.setOnClickListener {
             if (validarDatos()) {
-                procesarPago()
+                montoActual = etMonto.text.toString().toDoubleOrNull() ?: 0.0
+
+                mostrarDialogoQRyPago()
             }
         }
     }
 
     private fun validarDatos(): Boolean {
         if (metodoPagoSeleccionado.isEmpty()) {
-            Toast.makeText(this, "Selecciona un método de pago", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Selecciona un método de pago (Yape o Plin)", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -117,63 +87,144 @@ class PagosActivity : AppCompatActivity() {
             return false
         }
 
-        if (etReferencia.text.toString().isEmpty()) {
-            Toast.makeText(this, "Ingresa el número de referencia", Toast.LENGTH_SHORT).show()
+        val monto = etMonto.text.toString().toDoubleOrNull() ?: 0.0
+        if (monto <= 0) {
+            Toast.makeText(this, "El monto debe ser mayor a 0", Toast.LENGTH_SHORT).show()
             return false
         }
 
         return true
     }
 
+    private fun mostrarDialogoQRyPago() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Pasos para Realizar Pago")
+        builder.setMessage(
+            """
+            ✅ Abre tu aplicación $metodoPagoSeleccionado
+            
+            📱 Monto a pagar: S/. ${"%.2f".format(montoActual)}
+            
+            🔗 Escanea el QR mostrado arriba o transfiere a:
+            
+            📞 WhatsApp: $numeroContacto
+            🏦 Cuenta BCP: $cuentaBCP
+            
+            ¿Continuar?
+            """.trimIndent()
+        )
+        builder.setPositiveButton("Continuar") { _, _ ->
+            abrirAplicacionPago(metodoPagoSeleccionado)
+        }
+        builder.setNegativeButton("Cancelar", null)
+        builder.show()
+    }
+
+    private fun abrirAplicacionPago(app: String) {
+        val monto = etMonto.text.toString()
+
+        val intent = when (app) {
+            "Yape" -> {
+                Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse("yape://")
+                }
+            }
+            "Plin" -> {
+                Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse("plin://")
+                }
+            }
+            else -> null
+        }
+
+        if (intent != null && intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                mostrarDialogoConfirmacionPago()
+            }, 2000)
+        } else {
+            Toast.makeText(this, "$app no está instalada. Por favor instálala y reinenta.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun mostrarDialogoConfirmacionPago() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Confirmación de Pago")
+        builder.setMessage("¿Ya completaste el pago en $metodoPagoSeleccionado por S/. ${"%.2f".format(montoActual)}?")
+        builder.setPositiveButton("Sí, ya pagué") { _, _ ->
+            procesarPago()
+        }
+        builder.setNegativeButton("Todavía no", null)
+        builder.show()
+    }
+
     private fun procesarPago() {
         val userId = auth.currentUser?.uid ?: return
-        val servicioSeleccionado = spinnerServicio.selectedItem.toString()
         val monto = etMonto.text.toString().toDoubleOrNull() ?: 0.0
-        val descripcion = etDescripcion.text.toString()
-        val referencia = etReferencia.text.toString()
 
         val pago = Pago(
             id = firestore.collection("pagos").document().id,
             userId = userId,
-            servicioTipo = servicioSeleccionado,
+            servicioTipo = "Pago General",
             monto = monto,
             metodoPago = metodoPagoSeleccionado,
-            numeroReferencia = referencia,
-            descripcion = descripcion,
-            fecha = Timestamp.now()
+            numeroReferencia = "AUTO-${System.currentTimeMillis()}",
+            descripcion = "Pago realizado en $metodoPagoSeleccionado",
+            estado = "Confirmado",
+            fecha = Timestamp.now(),
+            numeroContacto = numeroContacto
         )
 
         firestore.collection("pagos").document(pago.id).set(pago)
             .addOnSuccessListener {
-                Toast.makeText(this, "Pago registrado exitosamente", Toast.LENGTH_LONG).show()
+                agregarPuntosAlUsuario(monto)
 
-                // Abrir WhatsApp con información del pago
-                enviarWhatsApp(pago)
+                Toast.makeText(this, "✅ Pago registrado exitosamente", Toast.LENGTH_LONG).show()
+                enviarWhatsApp(pago, monto)
 
-                finish()
+                etMonto.text.clear()
+                metodoPagoSeleccionado = ""
+                cardYape.setCardBackgroundColor(getColor(R.color.card_background))
+                cardPlin.setCardBackgroundColor(getColor(R.color.card_background))
+
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    finish()
+                }, 1500)
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error al registrar el pago", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "❌ Error al registrar el pago", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun enviarWhatsApp(pago: Pago) {
+    private fun agregarPuntosAlUsuario(monto: Double) {
+        val puntosGanados = (monto / 100).toInt()
+
+        if (puntosGanados > 0) {
+            firestore.collection("usuarios").document(usuarioActual).update(
+                "puntos", com.google.firebase.firestore.FieldValue.increment(puntosGanados.toLong())
+            )
+                .addOnSuccessListener {
+                    Toast.makeText(this, "🎉 +$puntosGanados puntos acumulados!", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private fun enviarWhatsApp(pago: Pago, monto: Double) {
         val mensaje = """
-            🤖 *ROBOT AL RESCATE - PAGO REGISTRADO*
+            🤖 *ROBOT AL RESCATE - PAGO CONFIRMADO*
             
-            📋 *Servicio:* ${pago.servicioTipo}
-            💰 *Monto:* S/ ${pago.monto}
+            💰 *Monto:* S/. ${"%.2f".format(monto)}
             💳 *Método:* ${pago.metodoPago}
-            🔢 *Referencia:* ${pago.numeroReferencia}
-            📝 *Descripción:* ${pago.descripcion}
-            
             ⏰ *Fecha:* ${java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(pago.fecha.toDate())}
             
-            Por favor, confirma la recepción del pago.
+            ✅ Pago registrado en el sistema
+            🎁 Puntos acumulados: ${(monto / 100).toInt()}
+            
+            ¡Gracias por tu compra!
         """.trimIndent()
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("https://wa.me/51${pago.numeroContacto}?text=${Uri.encode(mensaje)}")
+            data = Uri.parse("https://wa.me/51$numeroContacto?text=${Uri.encode(mensaje)}")
         }
         startActivity(intent)
     }

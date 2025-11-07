@@ -45,31 +45,38 @@ class AdminGestionReparacionesActivity : AppCompatActivity() {
     }
 
     private fun cargarOrdenes() {
+        Log.d("[v0]", "Iniciando carga de órdenes desde Firestore...")
         db.collection("ordenes_reparacion")
             .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Log.e("[v0]", "Error al cargar órdenes: ${error.message}")
-                    Toast.makeText(this, "Error al cargar órdenes", Toast.LENGTH_SHORT).show()
+                    Log.e("[v0]", "ERROR al cargar órdenes: ${error.message}")
+                    Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show()
                     return@addSnapshotListener
                 }
 
                 listaOrdenes.clear()
-                Log.d("[v0]", "Documentos encontrados: ${snapshot?.documents?.size ?: 0}")
+                val cantidad = snapshot?.documents?.size ?: 0
+                Log.d("[v0]", "Documentos encontrados: $cantidad")
 
                 snapshot?.documents?.forEach { doc ->
-                    val orden = doc.toObject(OrdenServicio::class.java)
-                    orden?.let {
-                        it.id = doc.id
-                        listaOrdenes.add(it)
-                        Log.d("[v0]", "Orden cargada: ${it.id} - ${it.nombre}")
+                    try {
+                        Log.d("[v0]", "Procesando documento: ${doc.id}")
+                        val orden = doc.toObject(OrdenServicio::class.java)
+                        orden?.let {
+                            it.id = doc.id
+                            listaOrdenes.add(it)
+                            Log.d("[v0]", "Orden agregada: ${it.nombre} - Estado: ${it.estado}")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("[v0]", "Error al procesar documento: ${e.message}")
                     }
                 }
 
                 if (listaOrdenes.isEmpty()) {
                     tvNoOrdenes.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
-                    Log.d("[v0]", "No hay órdenes para mostrar")
+                    Log.d("[v0]", "Sin órdenes para mostrar")
                 } else {
                     tvNoOrdenes.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
@@ -81,27 +88,27 @@ class AdminGestionReparacionesActivity : AppCompatActivity() {
     }
 
     private fun actualizarEstado(orden: OrdenServicio, nuevoEstado: String) {
-        Log.d("[v0]", "Actualizando estado de orden ${orden.id} a: $nuevoEstado")
+        Log.d("[v0]", "Actualizando orden ${orden.id} a: $nuevoEstado")
         db.collection("ordenes_reparacion").document(orden.id)
             .update("estado", nuevoEstado)
             .addOnSuccessListener {
                 Toast.makeText(this, "Estado actualizado a: $nuevoEstado", Toast.LENGTH_SHORT).show()
                 Log.d("[v0]", "Estado actualizado exitosamente")
 
-                if (nuevoEstado == "Listo") {
+                if (nuevoEstado == "Listo para recoger") {
                     crearNotificacionReparacion(orden)
                 }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al actualizar estado", Toast.LENGTH_SHORT).show()
-                Log.e("[v0]", "Error al actualizar estado: ${e.message}")
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("[v0]", "Error al actualizar: ${e.message}")
             }
     }
 
     private fun confirmarEliminar(orden: OrdenServicio) {
         AlertDialog.Builder(this)
             .setTitle("Eliminar Orden")
-            .setMessage("¿Estás seguro de eliminar esta orden?")
+            .setMessage("¿Estás seguro de que deseas eliminar esta orden?")
             .setPositiveButton("Eliminar") { _, _ ->
                 eliminarOrden(orden)
             }
@@ -114,12 +121,12 @@ class AdminGestionReparacionesActivity : AppCompatActivity() {
         db.collection("ordenes_reparacion").document(orden.id)
             .delete()
             .addOnSuccessListener {
-                Toast.makeText(this, "Orden eliminada correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Orden eliminada", Toast.LENGTH_SHORT).show()
                 Log.d("[v0]", "Orden eliminada exitosamente")
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al eliminar orden", Toast.LENGTH_SHORT).show()
-                Log.e("[v0]", "Error al eliminar orden: ${e.message}")
+                Toast.makeText(this, "Error al eliminar: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("[v0]", "Error al eliminar: ${e.message}")
             }
     }
 
@@ -138,10 +145,10 @@ class AdminGestionReparacionesActivity : AppCompatActivity() {
         db.collection("notificaciones").document()
             .set(notificacion)
             .addOnSuccessListener {
-                Log.d("[v0]", "Notificación de reparación creada para usuario: ${orden.userId}")
+                Log.d("[v0]", "Notificación creada para: ${orden.userId}")
             }
             .addOnFailureListener { e ->
-                Log.e("[v0]", "Error creando notificación: ${e.message}")
+                Log.e("[v0]", "Error en notificación: ${e.message}")
             }
     }
 }

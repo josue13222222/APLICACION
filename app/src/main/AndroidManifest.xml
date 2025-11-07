@@ -160,6 +160,12 @@
         <activity android:name=".RegisterActivity"
             android:exported="false" />
 
+        <!-- Agregar AdminGestionReparacionesActivity y VerImagenFullscreenActivity al manifest -->
+        <activity android:name=".AdminGestionReparacionesActivity"
+            android:exported="false" />
+        <activity android:name=".VerImagenFullscreenActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

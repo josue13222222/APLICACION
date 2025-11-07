@@ -5,18 +5,50 @@
     android:orientation="vertical"
     android:background="#000">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:background="#1a1a1a"
-        android:elevation="4dp" />
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-    <ImageView
-        android:id="@+id/imgFullscreen"
+        <ImageView
+            android:id="@+id/btnAtras"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="#FFFFFF"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Cerrar"/>
+
+        <TextView
+            android:id="@+id/tvTituloImagen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Imagen"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pellizca o doble tap"
+            android:textSize="11sp"
+            android:textColor="#AAAAAA"/>
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:contentDescription="Imagen en pantalla completa" />
+        android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/imgFullscreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:contentDescription="Imagen ampliada"/>
+    </FrameLayout>
 </LinearLayout>

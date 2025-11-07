@@ -18,16 +18,18 @@ class OrdenAdapter(
 ) : RecyclerView.Adapter<OrdenAdapter.OrdenViewHolder>() {
 
     class OrdenViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvNombre: TextView = itemView.findViewById(R.id.tvNombre)
-        val tvEquipo: TextView = itemView.findViewById(R.id.tvEquipo)
-        val tvProblema: TextView = itemView.findViewById(R.id.tvProblema)
-        val tvTelefono: TextView = itemView.findViewById(R.id.tvTelefono)
-        val tvEstadoActual: TextView = itemView.findViewById(R.id.tvEstadoActual)
-        val btnEnReparacion: Button = itemView.findViewById(R.id.btnEnReparacion)
-        val btnListoRecoger: Button = itemView.findViewById(R.id.btnListoRecoger)
-        val btnEliminar: Button = itemView.findViewById(R.id.btnEliminar)
-        val imgFoto1: ImageView = itemView.findViewById(R.id.imgFoto1)
-        val imgFoto2: ImageView = itemView.findViewById(R.id.imgFoto2)
+        val tvNombre: TextView? = itemView.findViewById(R.id.tvNombre)
+        val tvEquipo: TextView? = itemView.findViewById(R.id.tvEquipo)
+        val tvProblema: TextView? = itemView.findViewById(R.id.tvProblema)
+        val tvTelefono: TextView? = itemView.findViewById(R.id.tvTelefono)
+        val tvEstadoActual: TextView? = itemView.findViewById(R.id.tvEstadoActual)
+        val btnEnReparacion: Button? = itemView.findViewById(R.id.btnEnReparacion)
+        val btnListoRecoger: Button? = itemView.findViewById(R.id.btnListoRecoger)
+        val btnEliminar: Button? = itemView.findViewById(R.id.btnEliminar)
+        val imgFoto1: ImageView? = itemView.findViewById(R.id.imgFoto1)
+        val imgFoto2: ImageView? = itemView.findViewById(R.id.imgFoto2)
+        val imgFoto3: ImageView? = itemView.findViewById(R.id.imgFoto3)
+        val imgFoto4: ImageView? = itemView.findViewById(R.id.imgFoto4)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdenViewHolder {
@@ -38,68 +40,55 @@ class OrdenAdapter(
 
     override fun onBindViewHolder(holder: OrdenViewHolder, position: Int) {
         val orden = listaOrdenes[position]
-        holder.tvNombre.text = orden.nombre
-        holder.tvEquipo.text = "Equipo: ${orden.equipo}"
-        holder.tvProblema.text = "Problema: ${orden.problema}"
-        holder.tvTelefono.text = "Tel: ${orden.telefono}"
 
-        holder.tvEstadoActual.text = "Estado: ${orden.estado}"
+        holder.tvNombre?.text = orden.nombre
+        holder.tvEquipo?.text = "Equipo: ${orden.equipo}"
+        holder.tvProblema?.text = "Problema: ${orden.problema}"
+        holder.tvTelefono?.text = "Tel: ${orden.telefono}"
+        holder.tvEstadoActual?.text = "Estado: ${orden.estado}"
 
-        holder.btnEnReparacion.setOnClickListener {
+        holder.btnEnReparacion?.setOnClickListener {
             onActualizarEstado(orden, "En reparación")
         }
 
-        holder.btnListoRecoger.setOnClickListener {
+        holder.btnListoRecoger?.setOnClickListener {
             onActualizarEstado(orden, "Listo para recoger")
         }
 
-        holder.btnEliminar.setOnClickListener {
+        holder.btnEliminar?.setOnClickListener {
             onEliminarClick(orden)
         }
 
-        if (orden.imagenes.isNotEmpty()) {
-            // Primera imagen
-            if (orden.imagenes.size > 0 && orden.imagenes[0].isNotEmpty()) {
-                try {
-                    val decodedBytes = Base64.decode(orden.imagenes[0], Base64.DEFAULT)
-                    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-                    holder.imgFoto1.setImageBitmap(bitmap)
-                    holder.imgFoto1.visibility = View.VISIBLE
-                    holder.imgFoto1.setOnClickListener {
-                        val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
-                        intent.putExtra("imagen_base64", orden.imagenes[0])
-                        holder.itemView.context.startActivity(intent)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    holder.imgFoto1.visibility = View.GONE
-                }
-            } else {
-                holder.imgFoto1.visibility = View.GONE
-            }
+        val imagenesToShow = listOf(
+            Triple(holder.imgFoto1, 0, "Foto 1"),
+            Triple(holder.imgFoto2, 1, "Foto 2"),
+            Triple(holder.imgFoto3, 2, "Foto 3"),
+            Triple(holder.imgFoto4, 3, "Foto 4")
+        )
 
-            // Segunda imagen
-            if (orden.imagenes.size > 1 && orden.imagenes[1].isNotEmpty()) {
+        for ((imageView, index, label) in imagenesToShow) {
+            if (imageView == null) continue
+
+            if (orden.imagenes.isNotEmpty() && orden.imagenes.size > index && orden.imagenes[index].isNotEmpty()) {
                 try {
-                    val decodedBytes = Base64.decode(orden.imagenes[1], Base64.DEFAULT)
+                    val decodedBytes = Base64.decode(orden.imagenes[index], Base64.DEFAULT)
                     val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-                    holder.imgFoto2.setImageBitmap(bitmap)
-                    holder.imgFoto2.visibility = View.VISIBLE
-                    holder.imgFoto2.setOnClickListener {
+                    imageView.setImageBitmap(bitmap)
+                    imageView.visibility = View.VISIBLE
+
+                    imageView.setOnClickListener {
                         val intent = Intent(holder.itemView.context, VerImagenFullscreenActivity::class.java)
-                        intent.putExtra("imagen_base64", orden.imagenes[1])
+                        intent.putExtra("imagen_base64", orden.imagenes[index])
+                        intent.putExtra("titulo", label)
                         holder.itemView.context.startActivity(intent)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    holder.imgFoto2.visibility = View.GONE
+                    imageView.visibility = View.GONE
                 }
             } else {
-                holder.imgFoto2.visibility = View.GONE
+                imageView.visibility = View.GONE
             }
-        } else {
-            holder.imgFoto1.visibility = View.GONE
-            holder.imgFoto2.visibility = View.GONE
         }
     }
 
