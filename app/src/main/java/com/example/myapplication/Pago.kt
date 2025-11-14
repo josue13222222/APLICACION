@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp
 data class Pago(
     val id: String = "",
     val userId: String = "",
+    val correoUsuario: String = "",
     val servicioTipo: String = "",
     val monto: Double = 0.0,
     val metodoPago: String = "",

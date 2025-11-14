@@ -18,7 +18,7 @@ class MisPuntosActivity : AppCompatActivity() {
     private lateinit var recyclerHistorial: RecyclerView
 
     private val db = FirebaseFirestore.getInstance()
-    private val uid = FirebaseAuth.getInstance().currentUser?.uid
+    private val auth = FirebaseAuth.getInstance()
 
     private val historialList = mutableListOf<TransaccionPuntos>()
     private lateinit var adapter: HistorialAdapter
@@ -38,48 +38,56 @@ class MisPuntosActivity : AppCompatActivity() {
         recyclerHistorial.adapter = adapter
 
         cargarPuntos()
-        cargarHistorial()
 
         btnCanjear.setOnClickListener {
-            // Abre una nueva Activity para canjear puntos
             val intent = Intent(this, MisPuntosActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun cargarPuntos() {
-        uid?.let {
-            db.collection("usuarios_puntos").document(it)
-                .get()
-                .addOnSuccessListener { doc ->
-                    if (doc.exists()) {
-                        val puntosEmpeño = doc.getLong("puntosEmpeño") ?: 0
-                        val puntosReparacion = doc.getLong("puntosReparacion") ?: 0
-                        val totalPuntos = doc.getLong("totalPuntos") ?: 0
+        val correoUsuario = auth.currentUser?.email ?: return
 
-                        tvPuntosEmpeño.text = "Puntos Empeños: $puntosEmpeño"
-                        tvPuntosReparacion.text = "Puntos Reparación: $puntosReparacion"
-                        tvTotalPuntos.text = "Total de Puntos: $totalPuntos"
-                    }
+        db.collection("usuarios")
+            .whereEqualTo("correo", correoUsuario)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.documents.isNotEmpty()) {
+                    val usuarioDoc = querySnapshot.documents[0]
+                    val puntos = usuarioDoc.getLong("puntos") ?: 0
+
+                    tvPuntosEmpeño.text = "Puntos Acumulados: $puntos"
+                    tvPuntosReparacion.text = "Puntos Disponibles: $puntos"
+                    tvTotalPuntos.text = "Total de Puntos: $puntos"
                 }
-        }
+            }
     }
 
     private fun cargarHistorial() {
-        uid?.let {
-            db.collection("usuarios_puntos").document(it)
-                .collection("historial")
-                .orderBy("fecha", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                .addSnapshotListener { snapshots, _ ->
-                    if (snapshots != null) {
-                        historialList.clear()
-                        for (doc in snapshots) {
-                            val transaccion = doc.toObject(TransaccionPuntos::class.java)
-                            historialList.add(transaccion)
+        val correoUsuario = auth.currentUser?.email ?: return
+
+        db.collection("usuarios")
+            .whereEqualTo("correo", correoUsuario)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.documents.isNotEmpty()) {
+                    val usuarioDoc = querySnapshot.documents[0]
+                    val uid = usuarioDoc.id
+
+                    db.collection("usuarios").document(uid)
+                        .collection("historial")
+                        .orderBy("fecha", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                        .addSnapshotListener { snapshots, _ ->
+                            if (snapshots != null) {
+                                historialList.clear()
+                                for (doc in snapshots) {
+                                    val transaccion = doc.toObject(TransaccionPuntos::class.java)
+                                    historialList.add(transaccion)
+                                }
+                                adapter.notifyDataSetChanged()
+                            }
                         }
-                        adapter.notifyDataSetChanged()
-                    }
                 }
-        }
+            }
     }
 }

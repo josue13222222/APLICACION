@@ -37,26 +37,138 @@ class RobotIAActivity : AppCompatActivity() {
     private val OLLAMA_URL = "http://192.168.0.233:11434/api/generate"
     private val OLLAMA_MODEL = "qwen2.5:0.5b" // modelo ligero ya descargado
 
-    // 🧠 Instrucciones del asistente
+    // 🧠 Instrucciones del asistente - Mejorado para especialización en reparaciones
     private val SYSTEM_PROMPT = """
-        Eres "TechBot", un asistente experto en tecnología, reparaciones y ventas de equipos electrónicos.
+        Eres "ROBOT IA", un asistente especializado EN REPARACIÓN Y TECNOLOGÍA creado ESPECÍFICAMENTE para esta app.
+        Utilizas OLLAMA, tu propia IA de reparaciones integrada localmente en el dispositivo.
         
-        ÁREAS DE ESPECIALIZACIÓN:
-        - Reparación de laptops, PCs y móviles
-        - Diagnóstico de hardware/software
-        - Componentes de computadoras (RAM, SSD, procesadores, tarjetas madre, etc.)
-        - Problemas de conectividad (WiFi, Bluetooth, puertos USB)
-        - Mantenimiento preventivo
-        - Recomendaciones de compra
-        - Soluciones de software
+        ✅ TUS ESPECIALIDADES (RESPONDE SIEMPRE SOBRE ESTOS TEMAS):
         
-        INSTRUCCIONES:
-        - Responde solo sobre temas tecnológicos o reparaciones.
-        - Sé amable, técnico y breve.
-        - Si la pregunta no es de tecnología, responde: 
-          "Lo siento, solo puedo ayudarte con temas de tecnología, reparaciones o ventas de equipos."
-        - Usa emojis para hacer la conversación más agradable.
+        🛠️ REPARACIÓN DE HARDWARE:
+        - Diagnóstico de problemas en laptops, desktops, tablets, celulares
+        - Fallas de componentes: RAM, SSD, HDD, procesador, placa madre, fuente de poder
+        - Problemas físicos: pantalla rota, batería dañada, cargador defectuoso
+        - Conectores y puertos: USB, HDMI, Jack 3.5mm, puertos de carga
+        - Periféricos: impresoras, scanners, monitores, teclados, ratones
+        
+        💾 PROBLEMAS DE SOFTWARE:
+        - Drivers desactualizados o faltantes
+        - Sistemas operativos: Windows, Linux, macOS, Android, iOS
+        - Virus, malware, spyware - diagnóstico y eliminación
+        - Optimización y limpieza de equipos
+        - Actualizaciones y parches de seguridad
+        - Programas que no funcionan o dan errores
+        
+        🌐 CONECTIVIDAD Y REDES:
+        - WiFi lento o sin conexión
+        - Problemas de Bluetooth
+        - Configuración de red
+        - Cables de red y conexiones
+        
+        ⚙️ MANTENIMIENTO PREVENTIVO:
+        - Limpieza de polvo y ventiladores
+        - Refrigeración de equipos
+        - Cambio de pasta térmica
+        - Reemplazo de componentes
+        - Monitoreo de temperatura
+        
+        📊 RECOMENDACIONES TÉCNICAS:
+        - Especificaciones de equipos
+        - Compatibilidad de componentes
+        - Compra de hardware recomendado
+        - Valoración técnica de equipos
+        
+        ❌ DEBES RECHAZAR (NO SON TU ESPECIALIDAD):
+        - Política, deportes, películas, comida, viajes, humor
+        - Consejos médicos, legales, financieros
+        - Contenido adulto o inapropiado
+        - Cualquier tema NO relacionado con reparación/tecnología (excepto saludos cortos)
+        
+        🤖 TU IDENTIDAD:
+        Si te preguntan quién eres: "Soy ROBOT IA, tu asistente especializado en reparación y tecnología. Utilizo OLLAMA, una inteligencia artificial propia integrada en esta app. Puedo ayudarte a diagnosticar y resolver problemas en laptops, desktops, impresoras, celulares y otros equipos electrónicos."
+        
+        📋 INSTRUCCIONES DE RESPUESTA:
+        1. Sé técnico pero comprensible (nivel principiante a avanzado)
+        2. Usa emojis técnicos: 💻 🔧 ⚙️ 🖥️ 📱 🖨️ 🔌 ⚡ 🛠️ 💾
+        3. Respuestas breves y directas (2-3 párrafos máximo)
+        4. Estructura: Problema → Diagnóstico → Solución
+        5. Si necesitas más info, pregunta específicamente
+        6. Si no sabes, admítelo honestamente
+        7. Para problemas complejos, sugiere pasos detallados
+        
+        ⚠️ PARA PREGUNTAS FUERA DE ALCANCE:
+        Responde SIEMPRE así: "❌ Lo siento, solo puedo ayudarte con reparación y tecnología. ¿Tienes algún problema técnico que pueda resolver?"
+        
+        🎯 RECUERDA: Tu único propósito es ayudar con reparaciones y problemas tecnológicos.
     """.trimIndent()
+
+    private val palabrasClaveTecnologia = setOf(
+        // Hardware general
+        "laptop", "computadora", "pc", "desktop", "tablet", "smartphone", "celular", "móvil",
+        "ipad", "iphone", "samsung", "xiaomi", "lenovo", "asus", "hp", "dell", "acer",
+
+        // Problemas comunes
+        "reparación", "arreglar", "problema", "error", "no funciona", "falla", "roto", "dañado",
+        "lentitud", "lento", "se congela", "se cuelga", "se reinicia", "apaga", "no enciende",
+        "no carga", "no abre", "no conecta", "desconecta", "lag", "retrasos",
+
+        // Periféricos
+        "impresora", "scanner", "monitor", "teclado", "ratón", "mouse", "webcam", "micrófono",
+        "auriculares", "headphones", "parlante", "bocina", "router", "modem",
+
+        // Componentes internos
+        "ram", "ssd", "hdd", "disco duro", "procesador", "cpu", "gpu", "tarjeta gráfica",
+        "placa madre", "motherboard", "fuente de poder", "psu", "ventilador", "disipador",
+        "pasta térmica", "batería", "cargador", "adaptador", "cable",
+
+        // Software y SO
+        "driver", "drivers", "windows", "linux", "mac", "macos", "android", "ios",
+        "sistema operativo", "so", "bios", "uefi", "firmware", "actualizaciones",
+
+        // Seguridad
+        "virus", "malware", "spyware", "antivirus", "seguridad", "contraseña", "cifrado",
+        "hackeo", "piratería", "protección", "firewall", "defender", "mcafee", "avast",
+
+        // Conectividad
+        "wifi", "wifi", "bluetooth", "internet", "conexión", "red", "ethernet", "cable",
+        "puerto", "usb", "hdmi", "jack", "adapter", "inalámbrico", "conexión lenta",
+
+        // Energía y refrigeración
+        "batería", "cargador", "voltaje", "electricidad", "calor", "temperatura", "frío",
+        "refrigeración", "ventilación", "sobrecalentamiento", "overclocking",
+
+        // Pantalla y gráficos
+        "pantalla", "display", "monitor", "resolución", "gráficos", "video", "pixeles",
+        "brillo", "contraste", "color", "refresh", "hdmi", "vga", "displayport",
+
+        // Audio
+        "audio", "sonido", "micrófono", "bocina", "parlante", "volumen", "mudo",
+
+        // Almacenamiento
+        "disco", "almacenamiento", "espacio", "capacidad", "partición", "formato", "borrar",
+        "recuperación", "datos", "backup", "copia seguridad", "nube",
+
+        // Mantenimiento
+        "limpieza", "polvo", "mantenimiento", "optimización", "optim", "caché", "temporal",
+        "desinstalar", "programa", "aplicación", "app", "software",
+
+        // Compatibilidad
+        "compatible", "incompatible", "especificaciones", "specs", "requerimientos",
+        "comprar", "precio", "upgrade", "actualización", "mejora", "recomendación",
+
+        // Conectores específicos
+        "puerto", "conector", "adaptador", "dongle", "usb-c", "thunderbolt", "esim",
+
+        // Servidores y virtuales
+        "servidor", "máquina virtual", "vm", "virtualización", "virtual box", "vmware"
+    )
+
+    private val palabrasSaludos = setOf(
+        "hola", "buenos días", "buenas tardes", "buenas noches", "buenos días",
+        "¿cómo estás", "cómo estás", "qué tal", "hola!", "hey", "ei",
+        "¿quién eres", "quién eres", "qué eres", "cuéntame de ti",
+        "gracias", "muchas gracias", "ok", "está bien", "perfecto"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +187,7 @@ class RobotIAActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         // Mensaje de bienvenida
-        agregarMensaje("🤖 ¡Hola! Soy TechBot, tu asistente especializado en tecnología 💻 ¿En qué puedo ayudarte hoy?", false)
+        agregarMensaje("🤖 ¡Hola! Soy ROBOT IA, tu asistente especializado en reparación y tecnología 💻 ¿En qué puedo ayudarte hoy?", false)
 
         // Botón enviar
         btnEnviar.setOnClickListener {
@@ -92,6 +204,13 @@ class RobotIAActivity : AppCompatActivity() {
     }
 
     private fun enviarMensaje(mensaje: String) {
+        if (!esMensajeValido(mensaje)) {
+            agregarMensaje(mensaje, true)
+            etMensaje.text.clear()
+            agregarMensaje("❌ Lo siento, solo puedo ayudarte con reparación y tecnología. ¿Tienes algún problema técnico que pueda resolver?", false)
+            return
+        }
+
         agregarMensaje(mensaje, true)
         etMensaje.text.clear()
         progressBar.visibility = View.VISIBLE
@@ -158,6 +277,30 @@ class RobotIAActivity : AppCompatActivity() {
         mensajes.add(ChatMessage(texto, esUsuario))
         adapter.notifyItemInserted(mensajes.size - 1)
         recyclerView.scrollToPosition(mensajes.size - 1)
+    }
+
+    private fun esMensajeValido(mensaje: String): Boolean {
+        val mensajeLower = mensaje.lowercase()
+
+        // Acepta saludos
+        val esSaludo = palabrasSaludos.any {
+            mensajeLower.contains(it)
+        }
+
+        // Acepta preguntas técnicas
+        val esTecnologia = palabrasClaveTecnologia.count {
+            mensajeLower.contains(it)
+        } > 0
+
+        return esSaludo || esTecnologia
+    }
+
+    private fun esPrefiuntaTecnologica(mensaje: String): Boolean {
+        val mensajeLower = mensaje.lowercase()
+        val palabrasEncontradas = palabrasClaveTecnologia.count {
+            mensajeLower.contains(it)
+        }
+        return palabrasEncontradas > 0
     }
 }
 

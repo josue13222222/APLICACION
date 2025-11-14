@@ -4,6 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.*
+import android.graphics.Bitmap
+import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.google.firebase.auth.FirebaseAuth
@@ -45,7 +48,7 @@ class PagosActivity : AppCompatActivity() {
         cardYape = findViewById(R.id.cardYape)
         cardPlin = findViewById(R.id.cardPlin)
         btnPagar = findViewById(R.id.btnPagar)
-        ivQR = findViewById(R.id.ivQR)
+        ivQR = findViewById(R.id.ivQRDialog)
     }
 
     private fun setupMetodosPago() {
@@ -71,7 +74,7 @@ class PagosActivity : AppCompatActivity() {
             if (validarDatos()) {
                 montoActual = etMonto.text.toString().toDoubleOrNull() ?: 0.0
 
-                mostrarDialogoQRyPago()
+                mostrarDialogoQRConMonto()
             }
         }
     }
@@ -96,66 +99,128 @@ class PagosActivity : AppCompatActivity() {
         return true
     }
 
-    private fun mostrarDialogoQRyPago() {
-        val builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Pasos para Realizar Pago")
-        builder.setMessage(
-            """
-            ✅ Abre tu aplicación $metodoPagoSeleccionado
-            
-            📱 Monto a pagar: S/. ${"%.2f".format(montoActual)}
-            
-            🔗 Escanea el QR mostrado arriba o transfiere a:
-            
-            📞 WhatsApp: $numeroContacto
-            🏦 Cuenta BCP: $cuentaBCP
-            
-            ¿Continuar?
-            """.trimIndent()
-        )
-        builder.setPositiveButton("Continuar") { _, _ ->
-            abrirAplicacionPago(metodoPagoSeleccionado)
+    private fun mostrarDialogoQRConMonto() {
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_qr_pago, null)
+        val ivQRDialog = view.findViewById<ImageView>(R.id.ivQRDialog)
+        val tvMonto = view.findViewById<TextView>(R.id.tvMontoQR)
+        val ivLogo = view.findViewById<ImageView>(R.id.ivLogoPago)
+        val btnCapturar = view.findViewById<Button>(R.id.btnCapturar)
+        val btnCancelar = view.findViewById<Button>(R.id.btnCancelar)
+
+        val qrBitmap = GeneradorQR.generarQRPago(montoActual, numeroContacto)
+        if (qrBitmap == null) {
+            Toast.makeText(this, "Error al generar QR", Toast.LENGTH_SHORT).show()
+            return
         }
-        builder.setNegativeButton("Cancelar", null)
-        builder.show()
+
+        ivQRDialog.setImageBitmap(qrBitmap)
+
+        tvMonto.text = "S/. ${"%.2f".format(montoActual)}"
+
+        val logoResId = if (metodoPagoSeleccionado == "Yape") {
+            R.drawable.yape_logo
+        } else {
+            R.drawable.plin_logo
+        }
+        ivLogo.setImageResource(logoResId)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .setCancelable(false)
+            .create()
+
+        btnCapturar.setOnClickListener {
+            guardarPagoPendiente(view, qrBitmap)
+            dialog.dismiss()
+        }
+
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun guardarPagoPendiente(view: android.view.View, qrBitmap: Bitmap) {
+        val userId = auth.currentUser?.uid ?: return
+        val correoUsuario = auth.currentUser?.email ?: ""
+        val monto = etMonto.text.toString().toDoubleOrNull() ?: 0.0
+
+        val capturaFile = capturarYGuardarPantalla(view, qrBitmap)
+
+        val pago = Pago(
+            id = firestore.collection("pagos").document().id,
+            userId = userId,
+            correoUsuario = correoUsuario,
+            servicioTipo = "Pago General",
+            monto = monto,
+            metodoPago = metodoPagoSeleccionado,
+            numeroReferencia = "AUTO-${System.currentTimeMillis()}",
+            descripcion = "Pago realizado en $metodoPagoSeleccionado",
+            estado = "Pendiente",
+            fecha = Timestamp.now(),
+            numeroContacto = numeroContacto
+        )
+
+        firestore.collection("pagos").document(pago.id).set(pago)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Pago guardado como pendiente", Toast.LENGTH_SHORT).show()
+
+                abrirAplicacionPago(metodoPagoSeleccionado)
+
+                etMonto.text.clear()
+                metodoPagoSeleccionado = ""
+                cardYape.setCardBackgroundColor(getColor(R.color.card_background))
+                cardPlin.setCardBackgroundColor(getColor(R.color.card_background))
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al guardar el pago", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun capturarYGuardarPantalla(view: android.view.View, qrBitmap: Bitmap): java.io.File {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bitmap)
+        view.draw(canvas)
+
+        val file = java.io.File(getExternalFilesDir(null), "pago_qr_${System.currentTimeMillis()}.png")
+        val fos = java.io.FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        fos.close()
+
+        return file
     }
 
     private fun abrirAplicacionPago(app: String) {
-        val monto = etMonto.text.toString()
-
         val intent = when (app) {
             "Yape" -> {
-                Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse("yape://")
-                }
+                val yapeIntent = Intent()
+                yapeIntent.setPackage("com.yape.android")
+                yapeIntent.setAction(Intent.ACTION_MAIN)
+                yapeIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+                yapeIntent
             }
             "Plin" -> {
-                Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse("plin://")
-                }
+                val plinIntent = Intent()
+                plinIntent.setPackage("com.primax.plin")
+                plinIntent.setAction(Intent.ACTION_MAIN)
+                plinIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+                plinIntent
             }
             else -> null
         }
 
-        if (intent != null && intent.resolveActivity(packageManager) != null) {
+        try {
             startActivity(intent)
-            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                mostrarDialogoConfirmacionPago()
-            }, 2000)
-        } else {
-            Toast.makeText(this, "$app no está instalada. Por favor instálala y reinenta.", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            // Si la app no está instalada, abre la web como alternativa
+            val webIntent = when (app) {
+                "Yape" -> Intent(Intent.ACTION_VIEW, Uri.parse("https://www.yape.com.pe"))
+                "Plin" -> Intent(Intent.ACTION_VIEW, Uri.parse("https://www.plin.pe"))
+                else -> null
+            }
+            startActivity(webIntent)
         }
-    }
-
-    private fun mostrarDialogoConfirmacionPago() {
-        val builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Confirmación de Pago")
-        builder.setMessage("¿Ya completaste el pago en $metodoPagoSeleccionado por S/. ${"%.2f".format(montoActual)}?")
-        builder.setPositiveButton("Sí, ya pagué") { _, _ ->
-            procesarPago()
-        }
-        builder.setNegativeButton("Todavía no", null)
-        builder.show()
     }
 
     private fun procesarPago() {
@@ -165,6 +230,7 @@ class PagosActivity : AppCompatActivity() {
         val pago = Pago(
             id = firestore.collection("pagos").document().id,
             userId = userId,
+            correoUsuario = "",
             servicioTipo = "Pago General",
             monto = monto,
             metodoPago = metodoPagoSeleccionado,
@@ -204,9 +270,20 @@ class PagosActivity : AppCompatActivity() {
                 "puntos", com.google.firebase.firestore.FieldValue.increment(puntosGanados.toLong())
             )
                 .addOnSuccessListener {
-                    Toast.makeText(this, "🎉 +$puntosGanados puntos acumulados!", Toast.LENGTH_SHORT).show()
+                    mostrarDialogoPuntosGanados(puntosGanados)
                 }
         }
+    }
+
+    private fun mostrarDialogoPuntosGanados(puntos: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("🎉 ¡Puntos Acumulados!")
+        builder.setMessage("Has ganado $puntos puntos con esta compra.\n\nTotal puntos en tu cuenta: $puntos")
+        builder.setPositiveButton("Ver mis puntos") { _, _ ->
+            startActivity(Intent(this, MisPuntosActivity::class.java))
+        }
+        builder.setNegativeButton("Cerrar", null)
+        builder.show()
     }
 
     private fun enviarWhatsApp(pago: Pago, monto: Double) {

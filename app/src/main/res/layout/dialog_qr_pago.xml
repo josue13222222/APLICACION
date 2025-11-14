@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/dialog_background">
+
+    <!-- Header con logo de pago -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirma tu Pago"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_color"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Logo de Yape o Plin en lugar de texto -->
+        <ImageView
+            android:id="@+id/ivLogoPago"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:contentDescription="Logo de pago"
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="12dp" />
+
+    </LinearLayout>
+
+    <!-- QR Code -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivQRDialog"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:contentDescription="QR de pago"
+                android:scaleType="fitCenter"
+                android:background="@color/white" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Monto a Pagar -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:gravity="center"
+            android:background="@color/light_blue">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monto a Pagar"
+                android:textSize="14sp"
+                android:textColor="@color/gray_600"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvMontoQR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S/. 0.00"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_color" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Instrucciones actualizadas sin "escanea nuestro QR" -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📸 Captura la pantalla y paga con el QR\n✅ Se te darán puntos automáticamente\n🎁 El admin confirma tu pago"
+        android:textSize="12sp"
+        android:textColor="@color/gray_700"
+        android:lineSpacingExtra="8dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botón "Pagar" en lugar de "Capturar" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnCapturar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="💳 Pagar"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_secondary"
+            android:textColor="@color/primary_color"
+            android:layout_margin="4dp" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="✕ Cancelar"
+            android:textSize="12sp"
+            android:background="@drawable/button_cancel"
+            android:textColor="@color/white"
+            android:layout_margin="4dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

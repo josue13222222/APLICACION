@@ -76,23 +76,6 @@
                 android:padding="16dp"
                 android:gravity="center">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="📱 Escanea nuestro QR"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_color"
-                    android:layout_marginBottom="12dp" />
-
-                <ImageView
-                    android:id="@+id/ivQR"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:contentDescription="QR de pago de la empresa"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/qr_empresa" />
-
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -244,17 +227,11 @@
                             android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
+                                android:layout_width="50dp"
                                 android:layout_height="40dp"
-                                android:src="@drawable/ic_yape"
-                                android:layout_marginBottom="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Yape"
-                                android:textStyle="bold"
-                                android:textColor="@color/yape_color" />
+                                android:src="@drawable/yape_logo"
+                                android:contentDescription="Logo Yape"
+                                android:scaleType="fitCenter" />
 
                         </LinearLayout>
 
@@ -281,17 +258,11 @@
                             android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
+                                android:layout_width="50dp"
                                 android:layout_height="40dp"
-                                android:src="@drawable/ic_plin"
-                                android:layout_marginBottom="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Plin"
-                                android:textStyle="bold"
-                                android:textColor="@color/plin_color" />
+                                android:src="@drawable/plin_logo"
+                                android:contentDescription="Logo Plin"
+                                android:scaleType="fitCenter" />
 
                         </LinearLayout>
 
