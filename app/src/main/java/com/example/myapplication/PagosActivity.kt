@@ -146,35 +146,41 @@ class PagosActivity : AppCompatActivity() {
         val correoUsuario = auth.currentUser?.email ?: ""
         val monto = etMonto.text.toString().toDoubleOrNull() ?: 0.0
 
-        val capturaFile = capturarYGuardarPantalla(view, qrBitmap)
+        firestore.collection("usuarios").document(userId).get()
+            .addOnSuccessListener { document ->
+                val telefonoUsuario = document.getString("telefono") ?: ""
 
-        val pago = Pago(
-            id = firestore.collection("pagos").document().id,
-            userId = userId,
-            correoUsuario = correoUsuario,
-            servicioTipo = "Pago General",
-            monto = monto,
-            metodoPago = metodoPagoSeleccionado,
-            numeroReferencia = "AUTO-${System.currentTimeMillis()}",
-            descripcion = "Pago realizado en $metodoPagoSeleccionado",
-            estado = "Pendiente",
-            fecha = Timestamp.now(),
-            numeroContacto = numeroContacto
-        )
+                val capturaFile = capturarYGuardarPantalla(view, qrBitmap)
 
-        firestore.collection("pagos").document(pago.id).set(pago)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Pago guardado como pendiente", Toast.LENGTH_SHORT).show()
+                val pago = Pago(
+                    id = firestore.collection("pagos").document().id,
+                    userId = userId,
+                    correoUsuario = correoUsuario,
+                    telefonoUsuario = telefonoUsuario, // incluir teléfono en pago
+                    servicioTipo = "Pago General",
+                    monto = monto,
+                    metodoPago = metodoPagoSeleccionado,
+                    numeroReferencia = "AUTO-${System.currentTimeMillis()}",
+                    descripcion = "Pago realizado en $metodoPagoSeleccionado",
+                    estado = "Pendiente",
+                    fecha = Timestamp.now(),
+                    numeroContacto = numeroContacto
+                )
 
-                abrirAplicacionPago(metodoPagoSeleccionado)
+                firestore.collection("pagos").document(pago.id).set(pago)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Pago guardado como pendiente", Toast.LENGTH_SHORT).show()
 
-                etMonto.text.clear()
-                metodoPagoSeleccionado = ""
-                cardYape.setCardBackgroundColor(getColor(R.color.card_background))
-                cardPlin.setCardBackgroundColor(getColor(R.color.card_background))
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Error al guardar el pago", Toast.LENGTH_SHORT).show()
+                        abrirAplicacionPago(metodoPagoSeleccionado)
+
+                        etMonto.text.clear()
+                        metodoPagoSeleccionado = ""
+                        cardYape.setCardBackgroundColor(getColor(R.color.card_background))
+                        cardPlin.setCardBackgroundColor(getColor(R.color.card_background))
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Error al guardar el pago", Toast.LENGTH_SHORT).show()
+                    }
             }
     }
 

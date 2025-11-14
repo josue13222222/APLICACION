@@ -1,6 +1,8 @@
 package com.example.myapplication
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +21,7 @@ class MisPuntosActivity : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val historialList = mutableListOf<TransaccionPuntos>()
     private lateinit var adapter: HistorialAdapter
@@ -33,11 +36,14 @@ class MisPuntosActivity : AppCompatActivity() {
         btnCanjear = findViewById(R.id.btnCanjear)
         recyclerHistorial = findViewById(R.id.recyclerHistorial)
 
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
         recyclerHistorial.layoutManager = LinearLayoutManager(this)
         adapter = HistorialAdapter(historialList)
         recyclerHistorial.adapter = adapter
 
         cargarPuntos()
+        cargarHistorial()
 
         btnCanjear.setOnClickListener {
             val intent = Intent(this, MisPuntosActivity::class.java)
@@ -45,32 +51,40 @@ class MisPuntosActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        cargarPuntos()
+    }
+
     private fun cargarPuntos() {
-        val correoUsuario = auth.currentUser?.email ?: return
+        val telefonoUsuario = sharedPreferences.getString("telefono", "") ?: ""
 
-        db.collection("usuarios")
-            .whereEqualTo("correo", correoUsuario)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (querySnapshot.documents.isNotEmpty()) {
-                    val usuarioDoc = querySnapshot.documents[0]
-                    val puntos = usuarioDoc.getLong("puntos") ?: 0
+        Log.d("[v0]", "Loading points for phone: $telefonoUsuario")
 
-                    tvPuntosEmpeño.text = "Puntos Acumulados: $puntos"
-                    tvPuntosReparacion.text = "Puntos Disponibles: $puntos"
-                    tvTotalPuntos.text = "Total de Puntos: $puntos"
-                }
-            }
+        if (telefonoUsuario.isEmpty()) {
+            tvTotalPuntos.text = "Total de Puntos: 0"
+            return
+        }
+
+        SistemaPuntos.cargarPuntosDelUsuario(this, telefonoUsuario) { puntos ->
+            Log.d("[v0]", "Points loaded: $puntos for $telefonoUsuario")
+            tvPuntosEmpeño.text = "Puntos Acumulados: $puntos"
+            tvPuntosReparacion.text = "Puntos Disponibles: $puntos"
+            tvTotalPuntos.text = "Total de Puntos: $puntos"
+        }
     }
 
     private fun cargarHistorial() {
-        val correoUsuario = auth.currentUser?.email ?: return
+        val telefonoUsuario = sharedPreferences.getString("telefono", "") ?: ""
+
+        if (telefonoUsuario.isEmpty()) {
+            return
+        }
 
         db.collection("usuarios")
-            .whereEqualTo("correo", correoUsuario)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (querySnapshot.documents.isNotEmpty()) {
+            .whereEqualTo("telefono", telefonoUsuario)
+            .addSnapshotListener { querySnapshot, _ ->
+                if (querySnapshot != null && querySnapshot.documents.isNotEmpty()) {
                     val usuarioDoc = querySnapshot.documents[0]
                     val uid = usuarioDoc.id
 

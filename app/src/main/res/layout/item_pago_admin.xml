@@ -45,6 +45,16 @@
 
         </LinearLayout>
 
+        <!-- agregar teléfono del usuario -->
+        <TextView
+            android:id="@+id/tvTelefono"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tel: 999888777"
+            android:textColor="@color/primary_color"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
         <!-- Información del pago -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,7 +102,19 @@
             android:layout_height="wrap_content"
             android:text="15/12/2024 14:30"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- botón para eliminar pagos confirmados -->
+        <Button
+            android:id="@+id/btnEliminar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="🗑️ Eliminar Pago"
+            android:textSize="12sp"
+            android:background="@drawable/button_cancel"
+            android:textColor="@color/white"
+            android:visibility="gone" />
 
     </LinearLayout>
 

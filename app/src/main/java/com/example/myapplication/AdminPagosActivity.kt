@@ -112,6 +112,7 @@ class AdminPagosActivity : AppCompatActivity() {
                 .update("estado", nuevoEstado)
                 .addOnSuccessListener {
                     if (nuevoEstado == "Confirmado") {
+                        android.util.Log.d("[v0]", "Confirming payment for phone: ${pago.telefonoUsuario}, amount: ${pago.monto}")
                         agregarPuntosAlUsuario(pago)
                     }
                     Toast.makeText(this, "Estado actualizado a $nuevoEstado", Toast.LENGTH_SHORT).show()
@@ -124,33 +125,22 @@ class AdminPagosActivity : AppCompatActivity() {
     }
 
     private fun agregarPuntosAlUsuario(pago: Pago) {
-        val puntosGanados = (pago.monto / 100).toInt()
-
-        if (puntosGanados > 0 && pago.correoUsuario.isNotEmpty()) {
-            firestore.collection("usuarios")
-                .whereEqualTo("correo", pago.correoUsuario)
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    if (querySnapshot.documents.isNotEmpty()) {
-                        val usuarioDoc = querySnapshot.documents[0]
-                        val usuarioId = usuarioDoc.id
-
-                        // Sumar puntos al usuario encontrado
-                        firestore.collection("usuarios").document(usuarioId)
-                            .update("puntos", com.google.firebase.firestore.FieldValue.increment(puntosGanados.toLong()))
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "✅ Puntos sumados: +$puntosGanados", Toast.LENGTH_SHORT).show()
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "Error al sumar puntos", Toast.LENGTH_SHORT).show()
-                            }
-                    } else {
-                        Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Error al buscar usuario", Toast.LENGTH_SHORT).show()
-                }
+        if (pago.telefonoUsuario.isEmpty()) {
+            Toast.makeText(this, "❌ Teléfono de usuario no disponible", Toast.LENGTH_SHORT).show()
+            return
         }
+        SistemaPuntos.agregarPuntosFirestore(pago.telefonoUsuario, pago.monto)
+        Toast.makeText(this, "✅ Puntos sumados correctamente", Toast.LENGTH_SHORT).show()
+    }
+
+    fun eliminarPago(pagoId: String) {
+        firestore.collection("pagos").document(pagoId)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(this, "✅ Pago eliminado", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al eliminar", Toast.LENGTH_SHORT).show()
+            }
     }
 }

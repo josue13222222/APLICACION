@@ -6,6 +6,7 @@ data class Pago(
     val id: String = "",
     val userId: String = "",
     val correoUsuario: String = "",
+    val telefonoUsuario: String = "", // agregado campo teléfono
     val servicioTipo: String = "",
     val monto: Double = 0.0,
     val metodoPago: String = "",
