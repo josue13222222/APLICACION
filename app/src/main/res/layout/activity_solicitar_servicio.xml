@@ -1,78 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="#FFFFFF">
+    android:background="@drawable/tech_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Updated header styling and background -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Solicitud de Servicio Técnico"
+            android:text="📋 SOLICITUD DE SERVICIO"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#212121"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="32dp" />
 
-        <EditText
-            android:id="@+id/etNombre"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre del cliente"
-            android:padding="14dp"
-            android:background="@drawable/rounded_edittext"
-            android:textSize="16sp"
+            app:boxStrokeColor="@android:color/white"
+            app:hintTextColor="@android:color/white"
             android:layout_marginBottom="16dp"
-            android:inputType="textPersonName" />
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
 
-        <EditText
-            android:id="@+id/etTelefono"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre del cliente"
+                android:padding="14dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#CCCCCC"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Número de contacto"
-            android:padding="14dp"
-            android:inputType="phone"
-            android:background="@drawable/rounded_edittext"
-            android:textSize="16sp"
-            android:layout_marginBottom="16dp" />
-
-        <EditText
-            android:id="@+id/etEquipo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tipo de equipo"
-            android:padding="14dp"
-            android:background="@drawable/rounded_edittext"
-            android:textSize="16sp"
+            app:boxStrokeColor="@android:color/white"
+            app:hintTextColor="@android:color/white"
             android:layout_marginBottom="16dp"
-            android:inputType="text" />
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
 
-        <EditText
-            android:id="@+id/etProblema"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTelefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número de contacto"
+                android:padding="14dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#CCCCCC"
+                android:inputType="phone" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:hint="Descripción del problema"
-            android:padding="14dp"
-            android:gravity="top|start"
-            android:background="@drawable/rounded_edittext"
-            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@android:color/white"
+            app:hintTextColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEquipo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tipo de equipo"
+                android:padding="14dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#CCCCCC"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@android:color/white"
+            app:hintTextColor="@android:color/white"
             android:layout_marginBottom="32dp"
-            android:inputType="textMultiLine"
-            android:maxLines="6" />
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
 
-        <!-- Sección de 4 fotos -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etProblema"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:hint="Descripción del problema"
+                android:padding="14dp"
+                android:gravity="top|start"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#CCCCCC"
+                android:inputType="textMultiLine"
+                android:maxLines="6" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Fotos section - now makes all 4 photos mandatory -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fotos del equipo (Mínimo 1)"
+            android:text="📷 FOTOS DEL EQUIPO (OBLIGATORIAS 4)"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#212121"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp" />
 
         <!-- Foto 1 -->
@@ -86,9 +140,9 @@
                 android:id="@+id/btnSeleccionarFoto1"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="📷 Foto 1 - Cámara o Galería"
+                android:text="📷 Foto 1"
                 android:textColor="@android:color/white"
-                android:backgroundTint="#1976D2"
+                android:background="@drawable/btn_rounded"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp" />
@@ -96,9 +150,9 @@
             <ImageView
                 android:id="@+id/imgFoto1"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:background="#E0E0E0"
+                android:background="#444444"
                 android:visibility="gone"
                 android:contentDescription="Foto 1 del equipo" />
         </LinearLayout>
@@ -114,9 +168,9 @@
                 android:id="@+id/btnSeleccionarFoto2"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="📷 Foto 2 - Cámara o Galería"
+                android:text="📷 Foto 2"
                 android:textColor="@android:color/white"
-                android:backgroundTint="#F57C00"
+                android:background="@drawable/btn_rounded"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp" />
@@ -124,9 +178,9 @@
             <ImageView
                 android:id="@+id/imgFoto2"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:background="#E0E0E0"
+                android:background="#444444"
                 android:visibility="gone"
                 android:contentDescription="Foto 2 del equipo" />
         </LinearLayout>
@@ -142,9 +196,9 @@
                 android:id="@+id/btnSeleccionarFoto3"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="📷 Foto 3 - Cámara o Galería"
+                android:text="📷 Foto 3"
                 android:textColor="@android:color/white"
-                android:backgroundTint="#7B1FA2"
+                android:background="@drawable/btn_rounded"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp" />
@@ -152,9 +206,9 @@
             <ImageView
                 android:id="@+id/imgFoto3"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:background="#E0E0E0"
+                android:background="#444444"
                 android:visibility="gone"
                 android:contentDescription="Foto 3 del equipo" />
         </LinearLayout>
@@ -170,9 +224,9 @@
                 android:id="@+id/btnSeleccionarFoto4"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="📷 Foto 4 - Cámara o Galería"
+                android:text="📷 Foto 4"
                 android:textColor="@android:color/white"
-                android:backgroundTint="#00897B"
+                android:background="@drawable/btn_rounded"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp" />
@@ -180,9 +234,9 @@
             <ImageView
                 android:id="@+id/imgFoto4"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:background="#E0E0E0"
+                android:background="#444444"
                 android:visibility="gone"
                 android:contentDescription="Foto 4 del equipo" />
         </LinearLayout>
@@ -190,11 +244,12 @@
         <Button
             android:id="@+id/btnEnviar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Registrar Orden"
+            android:layout_height="56dp"
+            android:text="📝 REGISTRAR ORDEN"
             android:textColor="@android:color/white"
-            android:backgroundTint="#388E3C"
+            android:background="@drawable/btn_rounded"
             android:textAllCaps="false"
+            android:textStyle="bold"
             android:textSize="16sp" />
 
     </LinearLayout>

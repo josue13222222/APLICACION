@@ -1,111 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutCupones"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
-    tools:context=".CuponesActivity">
+    android:background="@drawable/tech_background"
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mis Puntos"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardPuntos"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="#2C2C2C"
-        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
+        <!-- Header con estilo bienvenida -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:text="💰 MIS PUNTOS Y CUPONES"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="💰 Mis Puntos Totales"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF" />
+        <!-- Card mejorada con tema bienvenida -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#2C2C2C">
 
-            <TextView
-                android:id="@+id/tvPuntos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0 puntos (S/0.00)"
-                android:textSize="20sp"
-                android:textColor="#4CAF50"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cada punto vale S/. 0.50"
-                android:textSize="14sp"
-                android:textColor="#BBDEFB"
-                android:layout_marginTop="4dp" />
-
-            <!-- Botón para canjear puntos -->
-            <Button
-                android:id="@+id/btnCanjearPuntos"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="🎁 Canjear Puntos"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:background="#FF6B00"
-                android:layout_marginTop="12dp"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-    <TextView
-        android:id="@+id/tvHistorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="📋 Historial de Puntos"
-        android:textSize="18sp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardPuntos"
-        app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨ Mis Puntos Totales"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCupones"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvHistorial"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:id="@+id/tvPuntos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 puntos (S/0.00)"
+                    android:textSize="24sp"
+                    android:textColor="#4CAF50"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cada punto equivale a S/. 0.50"
+                    android:textSize="12sp"
+                    android:textColor="#BBDEFB"
+                    android:layout_marginTop="8dp" />
+
+                <!-- Botón canjear con estilo bienvenida -->
+                <Button
+                    android:id="@+id/btnCanjearPuntos"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="CANJEAR PUNTOS"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:background="@drawable/btn_rounded"
+                    android:layout_marginTop="16dp"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Historial con estilo mejorado -->
+        <TextView
+            android:id="@+id/tvHistorial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📋 Historial de Movimientos"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCupones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

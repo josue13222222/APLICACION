@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/fondo_azul">
+    android:background="@drawable/tech_background">
 
     <!-- Título -->
     <TextView
@@ -20,53 +20,67 @@
     <Button
         android:id="@+id/btnDatosPersonales"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:text="DATOS PERSONALES"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:background="@drawable/boton_negro"
+        android:textSize="16sp"
+        android:background="@drawable/btn_rounded"
         android:drawableEnd="@drawable/person"
+        android:drawablePadding="8dp"
+        android:gravity="center|start"
+        android:paddingStart="16dp"
         android:layout_marginBottom="8dp" />
 
     <!-- Botón Notificaciones -->
     <Button
         android:id="@+id/btnNotificaciones"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:text="NOTIFICACIONES"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:background="@drawable/boton_negro"
+        android:textSize="16sp"
+        android:background="@drawable/btn_rounded"
         android:drawableEnd="@drawable/ic_notificacion"
+        android:drawablePadding="8dp"
+        android:gravity="center|start"
+        android:paddingStart="16dp"
         android:layout_marginBottom="8dp" />
 
     <!-- Botón Mis Compras -->
     <Button
         android:id="@+id/btnMisCompras"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:text="MIS PEDIDOS"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:background="@drawable/boton_negro"
+        android:textSize="16sp"
+        android:background="@drawable/btn_rounded"
         android:drawableEnd="@drawable/ic_compra"
+        android:drawablePadding="8dp"
+        android:gravity="center|start"
+        android:paddingStart="16dp"
         android:layout_marginBottom="8dp" />
 
-    <!-- Botón Direcciones -->
+    <!-- Botón Direcciones con mejor estilo -->
     <Button
         android:id="@+id/btnDirecciones"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:text="DIRECCIONES"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:background="@drawable/boton_negro"
+        android:textSize="16sp"
+        android:background="@drawable/btn_rounded"
         android:drawableEnd="@drawable/ic_location"
+        android:drawablePadding="8dp"
+        android:gravity="center|start"
+        android:paddingStart="16dp"
         android:layout_marginBottom="8dp" />
-
-
 </LinearLayout>
-
-
-
-

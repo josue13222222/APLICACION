@@ -210,8 +210,8 @@ class SolicitarServicioActivity : AppCompatActivity() {
             return
         }
 
-        if (foto1Uri == null && foto2Uri == null && foto3Uri == null && foto4Uri == null) {
-            Toast.makeText(this, "Debes agregar al menos una foto del equipo", Toast.LENGTH_SHORT).show()
+        if (foto1Uri == null || foto2Uri == null || foto3Uri == null || foto4Uri == null) {
+            Toast.makeText(this, "❌ DEBES AGREGAR LAS 4 FOTOS OBLIGATORIAS", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -256,7 +256,7 @@ class SolicitarServicioActivity : AppCompatActivity() {
             .set(datos)
             .addOnSuccessListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "Orden registrada exitosamente: $ordenId", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "✅ Orden registrada exitosamente: $ordenId", Toast.LENGTH_LONG).show()
                 println("[v0] Orden guardada en Firebase: $ordenId")
                 finish()
             }

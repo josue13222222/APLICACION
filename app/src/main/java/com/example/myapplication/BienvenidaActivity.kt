@@ -49,8 +49,6 @@ class BienvenidaActivity : AppCompatActivity() {
         val btnEmpenosActivity = findViewById<Button>(R.id.btnEmpenos)
         val btnCupones = findViewById<Button>(R.id.btnCupones)
         val btnPagos = findViewById<Button>(R.id.btnPagos)
-        val btnSeguimiento = findViewById<Button>(R.id.btnSeguimiento)
-        val btnDirecciones = findViewById<Button>(R.id.btnDirecciones)
 
         // Funcionalidad de botones
         btnMicuenta.setOnClickListener {
@@ -75,10 +73,6 @@ class BienvenidaActivity : AppCompatActivity() {
 
         btnPagos.setOnClickListener {
             startActivity(Intent(this, PagosActivity::class.java))
-        }
-
-        btnDirecciones.setOnClickListener {
-            startActivity(Intent(this, DireccionesActivity::class.java))
         }
 
         // Logo de Facebook con enlace

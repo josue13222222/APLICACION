@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var usuario: EditText
     private lateinit var contrasena: EditText
-    private lateinit var btnVerContrasena: ImageButton
-    private lateinit var btnBuscarUsuario: ImageButton
     private lateinit var login: Button
     private lateinit var registro: Button
     private lateinit var olvidoContrasena: TextView
@@ -43,8 +41,6 @@ class MainActivity : AppCompatActivity() {
 
         usuario = findViewById(R.id.usuario)
         contrasena = findViewById(R.id.contrasena)
-        btnVerContrasena = findViewById(R.id.btnVerContrasena)
-        btnBuscarUsuario = findViewById(R.id.btnBuscarUsuario)
         login = findViewById(R.id.login)
         registro = findViewById(R.id.registro)
         olvidoContrasena = findViewById(R.id.olvidasteContrasena)
@@ -88,15 +84,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Por favor, ingresa tu correo", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        btnVerContrasena.setOnClickListener {
-            isPasswordVisible = !isPasswordVisible
-            actualizarVisibilidadContrasena()
-        }
-
-        btnBuscarUsuario.setOnClickListener {
-            buscarUsuariosPorTelefono()
         }
 
         btnAccesoAdmin.setOnClickListener {
@@ -168,17 +155,6 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun actualizarVisibilidadContrasena() {
-        if (isPasswordVisible) {
-            contrasena.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            btnVerContrasena.setImageResource(R.drawable.ic_ojito)
-        } else {
-            contrasena.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            btnVerContrasena.setImageResource(R.drawable.ojocerrado)
-        }
-        contrasena.setSelection(contrasena.text.length)
-    }
-
     private fun guardarCorreo(email: String) {
         with(sharedPreferences.edit()) {
             putString("USER_EMAIL", email)
@@ -191,39 +167,5 @@ class MainActivity : AppCompatActivity() {
         if (!savedEmail.isNullOrEmpty()) {
             usuario.setText(savedEmail)
         }
-    }
-
-    private fun buscarUsuariosPorTelefono() {
-        val telefono = "123456789"
-        database.orderByChild("telefono").equalTo(telefono).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val emails = mutableListOf<String>()
-                for (userSnapshot in snapshot.children) {
-                    val email = userSnapshot.child("email").getValue(String::class.java)
-                    if (!email.isNullOrEmpty()) {
-                        emails.add(email)
-                    }
-                }
-
-                if (emails.isNotEmpty()) {
-                    mostrarDialogoUsuarios(emails)
-                } else {
-                    Toast.makeText(this@MainActivity, "No hay usuarios registrados con este teléfono", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Error al buscar usuarios", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun mostrarDialogoUsuarios(emails: List<String>) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Selecciona un correo")
-        builder.setItems(emails.toTypedArray()) { _, which ->
-            usuario.setText(emails[which])
-        }
-        builder.show()
     }
 }

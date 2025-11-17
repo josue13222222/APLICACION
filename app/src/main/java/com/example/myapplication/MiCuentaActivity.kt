@@ -33,7 +33,7 @@ class MiCuentaActivity : AppCompatActivity() {
 
         // Botón Direcciones
         btnDirecciones.setOnClickListener {
-            startActivity(Intent(this, AddressFormActivity::class.java))
+            startActivity(Intent(this, DireccionesActivity::class.java))
         }
 
     }

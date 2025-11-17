@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -130,35 +131,46 @@ class CuponesActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
-                val opciones = arrayOf(
-                    "5 puntos (S/. 2.50)",
-                    "10 puntos (S/. 5.00)",
-                    "20 puntos (S/. 10.00)",
-                    "50 puntos (S/. 25.00)"
-                )
+                val editText = EditText(this)
+                editText.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+                editText.hint = "Ingresa cantidad de puntos"
 
                 android.app.AlertDialog.Builder(this)
                     .setTitle("Canjear Puntos")
-                    .setMessage("Selecciona cuántos puntos deseas canjear")
-                    .setItems(opciones) { _, which ->
-                        val puntosCanjear = when (which) {
-                            0 -> 5
-                            1 -> 10
-                            2 -> 20
-                            3 -> 50
-                            else -> 0
-                        }
+                    .setMessage("Tienes $puntosTotales puntos disponibles\nCada punto = S/. 0.50\n\nIngresa la cantidad de puntos a canjear:")
+                    .setView(editText)
+                    .setPositiveButton("CANJEAR") { _, _ ->
+                        val puntosIngresados = editText.text.toString().toIntOrNull() ?: 0
 
-                        if (puntosCanjear > 0 && puntosCanjear <= puntosTotales) {
-                            realizarCanjeoPuntos(uid, puntosCanjear)
-                        } else {
-                            android.app.AlertDialog.Builder(this)
-                                .setTitle("Puntos Insuficientes")
-                                .setMessage("No tienes suficientes puntos para esta operación")
-                                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                                .show()
+                        when {
+                            puntosIngresados <= 0 -> {
+                                android.app.AlertDialog.Builder(this)
+                                    .setTitle("Cantidad Inválida")
+                                    .setMessage("Ingresa una cantidad válida de puntos")
+                                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                            puntosIngresados > puntosTotales -> {
+                                android.app.AlertDialog.Builder(this)
+                                    .setTitle("Puntos Insuficientes")
+                                    .setMessage("No tienes suficientes puntos. Máximo: $puntosTotales")
+                                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                            else -> {
+                                val descuentoSoles = puntosIngresados * 0.50
+                                android.app.AlertDialog.Builder(this)
+                                    .setTitle("Confirmar Canje")
+                                    .setMessage("Vas a canjear $puntosIngresados puntos\nDescuento: S/. ${"%.2f".format(descuentoSoles)}")
+                                    .setPositiveButton("CONFIRMAR") { _, _ ->
+                                        realizarCanjeoPuntos(uid, puntosIngresados)
+                                    }
+                                    .setNegativeButton("CANCELAR") { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
                         }
                     }
+                    .setNegativeButton("CANCELAR") { dialog, _ -> dialog.dismiss() }
                     .show()
             }
     }
@@ -168,15 +180,14 @@ class CuponesActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 val puntoActuales = document.getLong("puntos")?.toInt() ?: 0
                 val nuevasCantidad = puntoActuales - puntosCanjear
+                val descuentoSoles = puntosCanjear * 0.50
 
-                // Actualizar puntos
                 db.collection("usuarios").document(uid)
                     .update("puntos", nuevasCantidad)
                     .addOnSuccessListener {
-                        // Registrar en historial
                         val historial = hashMapOf(
                             "tipo" to "Canje",
-                            "descripcion" to "Canje de $puntosCanjear puntos - Efectivo",
+                            "descripcion" to "Canje de $puntosCanjear puntos - S/. ${"%.2f".format(descuentoSoles)} de descuento",
                             "puntos" to -puntosCanjear,
                             "fecha" to System.currentTimeMillis()
                         )
@@ -186,12 +197,16 @@ class CuponesActivity : AppCompatActivity() {
                             .add(historial)
                             .addOnSuccessListener {
                                 Log.d("[v0] CuponesActivity", "Canje exitoso: $puntosCanjear puntos")
+
+                                // Save notification when points are redeemed
+                                guardarNotificacionCanje(uid, puntosCanjear, descuentoSoles)
+
                                 cargarPuntosUsuario()
                                 cargarHistorialPuntos()
 
                                 android.app.AlertDialog.Builder(this)
-                                    .setTitle("Canje Exitoso")
-                                    .setMessage("Canjeaste $puntosCanjear puntos por S/. ${"%.2f".format(puntosCanjear * 0.50)}")
+                                    .setTitle("¡Canje Exitoso!")
+                                    .setMessage("¡Felicidades! Ganaste S/. ${"%.2f".format(descuentoSoles)} de descuento")
                                     .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
                                     .show()
                             }
@@ -202,6 +217,28 @@ class CuponesActivity : AppCompatActivity() {
                     .addOnFailureListener { e ->
                         Log.e("[v0] CuponesActivity", "Error al actualizar puntos: ${e.message}")
                     }
+            }
+    }
+
+    // New function to save redemption notification
+    private fun guardarNotificacionCanje(uid: String, puntosCanjear: Int, descuentoSoles: Double) {
+        val notificacion = hashMapOf(
+            "userId" to uid,
+            "titulo" to "¡Canje de Puntos Exitoso!",
+            "descripcion" to "¡Felicidades! Canjeaste $puntosCanjear puntos y ganaste S/. ${"%.2f".format(descuentoSoles)} de descuento",
+            "tipo" to "canje",
+            "fecha" to java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(java.util.Date()),
+            "fechaCreacion" to com.google.firebase.Timestamp.now(),
+            "leida" to false
+        )
+
+        db.collection("notificaciones")
+            .add(notificacion)
+            .addOnSuccessListener {
+                Log.d("[v0] CuponesActivity", "Notificación de canje guardada")
+            }
+            .addOnFailureListener { e ->
+                Log.e("[v0] CuponesActivity", "Error al guardar notificación: ${e.message}")
             }
     }
 }

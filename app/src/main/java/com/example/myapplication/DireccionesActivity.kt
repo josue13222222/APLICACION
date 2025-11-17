@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 class DireccionesActivity : AppCompatActivity() {
 
@@ -27,8 +25,6 @@ class DireccionesActivity : AppCompatActivity() {
         btnLlamar.setOnClickListener {
             llamarTienda()
         }
-
-        configurarGaleriaImagenes()
     }
 
     private fun abrirEnGoogleMaps() {
@@ -51,18 +47,5 @@ class DireccionesActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, "No se puede realizar la llamada", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun configurarGaleriaImagenes() {
-        val recyclerView = findViewById<RecyclerView>(R.id.rvImagenesTienda)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        val imagenes = listOf(
-            R.drawable.fondo,
-            R.drawable.monitor
-        )
-
-        val adapter = ImagenesGaleriaAdapter(imagenes)
-        recyclerView.adapter = adapter
     }
 }

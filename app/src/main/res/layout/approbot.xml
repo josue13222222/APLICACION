@@ -1,103 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E00E24"
-    tools:context=".MainActivity">
+    android:background="@drawable/tech_background">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Logo y título con estilo bienvenida -->
         <ImageView
             android:id="@+id/robot"
             android:layout_width="154dp"
             android:layout_height="98dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
             android:contentDescription="Medical Icon"
             android:src="@drawable/robot" />
 
-        Contenedor para el campo de usuario y el icono de búsqueda
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="INICIAR SESIÓN"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
 
-            <EditText
+        <!-- Campos con Material Design mejorado -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Correo o celular"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxStrokeColor="@android:color/white"
+            app:hintTextColor="@android:color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_edittext"
-                android:hint="Correo o número de celular"
                 android:padding="12dp"
                 android:textColor="@android:color/white"
-                android:textColorHint="#B0B0B0"
-                android:paddingEnd="50dp" />
+                android:textColorHint="#B0B0B0" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageButton
-                android:id="@+id/btnBuscarUsuario"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:src="@android:drawable/ic_menu_search"
-                android:contentDescription="Buscar usuario" />
-        </RelativeLayout>
-
-        Contenedor para el campo de contraseña y el icono del ojo
-        <RelativeLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_marginBottom="12dp"
+            android:hint="Contraseña"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxStrokeColor="@android:color/white"
+            app:hintTextColor="@android:color/white"
+            app:passwordToggleEnabled="true">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/contrasena"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_edittext"
-                android:hint="Ingresa tu contraseña"
                 android:inputType="textPassword"
                 android:padding="12dp"
-                android:textColor="@android:color/black"
-                android:textColorHint="#B0B0B0"
-                android:paddingEnd="50dp" />
-
-            <ImageButton
-                android:id="@+id/btnVerContrasena"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:src="@drawable/ojocerrado"
-                android:contentDescription="Mostrar/Ocultar contraseña" />
-
-        </RelativeLayout>
+                android:textColor="@android:color/white"
+                android:textColorHint="#B0B0B0" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/olvidasteContrasena"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             android:background="@android:color/transparent"
-            android:text="¿Has olvidado tu contraseña?"
+            android:text="¿Olvidaste tu contraseña?"
             android:textAllCaps="false"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/white" />
 
-        Botones del mismo tamaño y mejor diseño
+        <!-- Botones con estilo bienvenida -->
         <Button
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="#1976D2"
+            android:background="@drawable/btn_rounded"
             android:text="INICIAR SESIÓN"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -109,10 +105,9 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="#4CAF50"
+            android:background="@drawable/btn_rounded"
             android:text="REGISTRARSE"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:elevation="4dp" />
@@ -122,15 +117,14 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="#1A237E"
+            android:background="@drawable/btn_rounded"
             android:text="🔐 ACCESO ADMINISTRADORES"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:elevation="4dp" />
 
     </LinearLayout>
 
-</FrameLayout>
+</ScrollView>
