@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class MisPuntosActivity : AppCompatActivity() {
 
-    private lateinit var tvPuntosEmpeño: TextView
     private lateinit var tvPuntosReparacion: TextView
     private lateinit var tvTotalPuntos: TextView
     private lateinit var btnCanjear: Button
@@ -30,7 +29,6 @@ class MisPuntosActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mis_puntos)
 
-        tvPuntosEmpeño = findViewById(R.id.tvPuntosEmpeño)
         tvPuntosReparacion = findViewById(R.id.tvPuntosReparacion)
         tvTotalPuntos = findViewById(R.id.tvTotalPuntos)
         btnCanjear = findViewById(R.id.btnCanjear)
@@ -46,7 +44,7 @@ class MisPuntosActivity : AppCompatActivity() {
         cargarHistorial()
 
         btnCanjear.setOnClickListener {
-            val intent = Intent(this, MisPuntosActivity::class.java)
+            val intent = Intent(this, CuponesActivity::class.java)
             startActivity(intent)
         }
     }
@@ -68,9 +66,8 @@ class MisPuntosActivity : AppCompatActivity() {
 
         SistemaPuntos.cargarPuntosDelUsuario(this, telefonoUsuario) { puntos ->
             Log.d("[v0]", "Points loaded: $puntos for $telefonoUsuario")
-            tvPuntosEmpeño.text = "Puntos Acumulados: $puntos"
-            tvPuntosReparacion.text = "Puntos Disponibles: $puntos"
-            tvTotalPuntos.text = "Total de Puntos: $puntos"
+            tvPuntosReparacion.text = "$puntos pts"
+            tvTotalPuntos.text = puntos.toString()
         }
     }
 

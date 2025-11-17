@@ -97,6 +97,7 @@
                 android:textColorHint="#B0B0B0" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Contraseña con toggle de visibilidad -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,7 +108,9 @@
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusBottomEnd="12dp"
             app:boxStrokeColor="@android:color/white"
-            app:hintTextColor="@android:color/white">
+            app:hintTextColor="@android:color/white"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@android:color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etContrasena"
@@ -119,6 +122,7 @@
                 android:textColorHint="#B0B0B0" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Confirmar contraseña con toggle de visibilidad -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -129,7 +133,9 @@
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusBottomEnd="12dp"
             app:boxStrokeColor="@android:color/white"
-            app:hintTextColor="@android:color/white">
+            app:hintTextColor="@android:color/white"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@android:color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etConfirmarContrasena"

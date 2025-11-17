@@ -69,6 +69,7 @@ class AdminDashboardActivity : AppCompatActivity() {
         val btnGestionReparaciones = findViewById<Button>(R.id.btnGestionReparaciones)
 
         btnGestionUsuarios.setOnClickListener {
+            actualizarBotonUsuarios(btnGestionUsuarios)
             startActivity(Intent(this, AdminUsuariosActivity::class.java))
         }
 
@@ -111,6 +112,19 @@ class AdminDashboardActivity : AppCompatActivity() {
         }
     }
 
+    private fun actualizarBotonUsuarios(btnGestionUsuarios: Button) {
+        firestore.collection("usuarios").addSnapshotListener { documents, exception ->
+            if (exception != null) {
+                return@addSnapshotListener
+            }
+
+            if (documents != null) {
+                val totalUsuarios = documents.size()
+                btnGestionUsuarios.text = "👥 GESTIÓN DE USUARIOS"
+            }
+        }
+    }
+
     private fun cargarEstadisticas() {
         firestore.collection("usuarios").addSnapshotListener { usuariosSnapshot, exception ->
             if (exception != null) {
@@ -137,10 +151,10 @@ class AdminDashboardActivity : AppCompatActivity() {
                                 }
 
                                 val estadisticas = """
-                                    Usuarios Registrados: ${usuariosSnapshot.size()}
-                                    Usuarios Activos: $usuariosActivos
-                                    Órdenes de Servicio: ${ordenesSnapshot.size()}
-                                    Empeños Activos: ${empenosSnapshot.size()}
+                                    👥 Usuarios Registrados: ${usuariosSnapshot.size()}
+                                    ✅ Usuarios Activos: $usuariosActivos
+                                    🔧 Órdenes de Servicio: ${ordenesSnapshot.size()}
+                                    💎 Empeños Activos: ${empenosSnapshot.size()}
                                 """.trimIndent()
                                 tvEstadisticas.text = estadisticas
                             }

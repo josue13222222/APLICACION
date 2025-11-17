@@ -208,7 +208,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="8dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -217,13 +217,13 @@
                 android:orientation="vertical"
                 android:background="#E3F2FD"
                 android:padding="12dp"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="4dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Total Cupones"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textColor="#666" />
 
                 <TextView
@@ -231,7 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2196F3" />
 
@@ -244,13 +244,13 @@
                 android:orientation="vertical"
                 android:background="#C8E6C9"
                 android:padding="12dp"
-                android:layout_marginStart="8dp">
+                android:layout_marginHorizontal="4dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cupones Usados"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textColor="#666" />
 
                 <TextView
@@ -258,9 +258,72 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#4CAF50" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Nueva sección: Puntos en Cupones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#FFF3E0"
+                android:padding="12dp"
+                android:layout_marginEnd="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Puntos Totales"
+                    android:textSize="11sp"
+                    android:textColor="#666" />
+
+                <TextView
+                    android:id="@+id/txtPuntosTotales"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF9800" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#FFCCBC"
+                android:padding="12dp"
+                android:layout_marginStart="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Puntos Usados"
+                    android:textSize="11sp"
+                    android:textColor="#666" />
+
+                <TextView
+                    android:id="@+id/txtPuntosUsados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#E64A19" />
 
             </LinearLayout>
 
@@ -303,6 +366,18 @@
                 android:gravity="center" />
 
         </LinearLayout>
+
+        <!-- Agregar botón para exportar a PDF -->
+        <Button
+            android:id="@+id/btnExportarPDF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📄 Exportar Reporte a PDF"
+            android:backgroundTint="#D32F2F"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:padding="16dp"
+            android:layout_marginBottom="8dp" />
 
         <!-- Botón Generar Reporte -->
         <Button

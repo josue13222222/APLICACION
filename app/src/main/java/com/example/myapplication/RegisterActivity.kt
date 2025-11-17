@@ -54,7 +54,6 @@ class RegisterActivity : AppCompatActivity() {
         val contrasena = etContrasena.text.toString().trim()
         val confirmarContrasena = etConfirmarContrasena.text.toString().trim()
 
-        // Validaciones
         if (nombre.isEmpty()) {
             etNombre.error = "Ingresa tu nombre"
             etNombre.requestFocus()
@@ -85,13 +84,15 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
+        btnRegistrar.isEnabled = false
+        btnRegistrar.text = "Registrando..."
+
         // Registrar en Firebase Auth
         auth.createUserWithEmailAndPassword(correo, contrasena)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val userId = auth.currentUser?.uid
                     if (userId != null) {
-                        // Guardar datos en Firestore
                         val usuarioData = hashMapOf(
                             "nombre" to nombre,
                             "email" to correo,
@@ -104,15 +105,20 @@ class RegisterActivity : AppCompatActivity() {
 
                         firestore.collection("usuarios").document(userId).set(usuarioData)
                             .addOnSuccessListener {
-                                Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "✅ Registro exitoso", Toast.LENGTH_SHORT).show()
                                 finish()
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(this, "Error al guardar datos: ${e.message}", Toast.LENGTH_SHORT).show()
+                                btnRegistrar.isEnabled = true
+                                btnRegistrar.text = "REGISTRARSE"
+                                Toast.makeText(this, "❌ Error al guardar datos: ${e.message}", Toast.LENGTH_SHORT).show()
                             }
                     }
                 } else {
-                    Toast.makeText(this, "Error al registrar: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    btnRegistrar.isEnabled = true
+                    btnRegistrar.text = "REGISTRARSE"
+                    val errorMessage = task.exception?.message ?: "Error desconocido"
+                    Toast.makeText(this, "❌ Error al registrar: $errorMessage", Toast.LENGTH_LONG).show()
                 }
             }
     }

@@ -40,7 +40,7 @@ class DatosPersonalesActivity : AppCompatActivity() {
         etFechaNacimiento.setOnClickListener { mostrarDatePicker() }
         btnGuardar.setOnClickListener { guardarDatos() }
 
-        cargarDatos() // Cargar datos si existen en Firestore
+        cargarDatos()
     }
 
     private fun mostrarDatePicker() {
@@ -86,14 +86,52 @@ class DatosPersonalesActivity : AppCompatActivity() {
         )
 
         db.collection("usuarios").document(userId)
-            .set(datosUsuario) // Usa set() para evitar errores si el documento no existe
+            .set(datosUsuario)
             .addOnSuccessListener {
+                verificarYGuardarFelicitacionEnNotificaciones(fechaNacimiento, nombre, userId)
                 Toast.makeText(this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al guardar los datos: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun verificarYGuardarFelicitacionEnNotificaciones(fechaNacimiento: String, nombre: String, userId: String) {
+        try {
+            val partes = fechaNacimiento.split("/")
+            if (partes.size != 3) return
+
+            val dia = partes[0].toInt()
+            val mes = partes[1].toInt()
+
+            val hoy = Calendar.getInstance()
+            val diaHoy = hoy.get(Calendar.DAY_OF_MONTH)
+            val mesHoy = hoy.get(Calendar.MONTH) + 1
+
+            if (dia == diaHoy && mes == mesHoy) {
+                val notificacion = hashMapOf(
+                    "titulo" to "🎉 ¡FELIZ CUMPLEAÑOS, $nombre!",
+                    "descripcion" to "Que disfrutes este día especial. Robot está aquí para servirte. ¡Que cumplas muchos años más!",
+                    "tipo" to "cumpleaños",
+                    "userId" to userId,
+                    "fecha" to java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(java.util.Date()),
+                    "fechaCreacion" to com.google.firebase.Timestamp.now(),
+                    "leida" to false
+                )
+
+                db.collection("notificaciones").document()
+                    .set(notificacion)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "🎉 ¡FELIZ CUMPLEAÑOS!", Toast.LENGTH_LONG).show()
+                    }
+                    .addOnFailureListener { e ->
+                        println("[v0] Error al guardar notificación de cumpleaños: ${e.message}")
+                    }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun cargarDatos() {

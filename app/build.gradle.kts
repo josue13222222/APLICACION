@@ -97,4 +97,8 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
 
     implementation("com.google.zxing:core:3.5.1")
+
+    implementation("com.itextpdf:itext7-core:7.2.5")
+
+    implementation("androidx.documentfile:documentfile:1.0.1")
 }

@@ -65,7 +65,7 @@
                     android:textColor="#BBDEFB"
                     android:layout_marginTop="8dp" />
 
-                <!-- Botón canjear con estilo bienvenida -->
+                <!-- Botón canjear con estilo mejorado -->
                 <Button
                     android:id="@+id/btnCanjearPuntos"
                     android:layout_width="match_parent"

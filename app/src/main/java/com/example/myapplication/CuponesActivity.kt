@@ -123,46 +123,126 @@ class CuponesActivity : AppCompatActivity() {
                 val puntosTotales = document.getLong("puntos")?.toInt() ?: 0
 
                 if (puntosTotales == 0) {
-                    android.app.AlertDialog.Builder(this)
-                        .setTitle("Sin Puntos")
-                        .setMessage("No tienes puntos disponibles para canjear")
-                        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    val builder = android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog)
+                    val view = android.widget.LinearLayout(this).apply {
+                        orientation = android.widget.LinearLayout.VERTICAL
+                        setPadding(40, 40, 40, 40)
+
+                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                            text = "😢 Sin Puntos Disponibles"
+                            textSize = 20f
+                            setTextColor(android.graphics.Color.WHITE)
+                            setTypeface(null, android.graphics.Typeface.BOLD)
+                        })
+
+                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                            text = "\nNo tienes puntos para canjear en este momento.\n\n¿Sabías que?\n✓ Ganas puntos por cada compra\n✓ Ganas puntos por empeños\n✓ Ganas puntos por reparaciones\n\nContinúa comprando para acumular puntos y obtener increíbles descuentos."
+                            textSize = 14f
+                            setTextColor(android.graphics.Color.LTGRAY)
+                            setPadding(0, 16, 0, 16)
+                        })
+                    }
+                    builder.setView(view)
+                        .setPositiveButton("ENTENDIDO") { dialog, _ -> dialog.dismiss() }
                         .show()
                     return@addOnSuccessListener
                 }
 
-                val editText = EditText(this)
-                editText.inputType = android.text.InputType.TYPE_CLASS_NUMBER
-                editText.hint = "Ingresa cantidad de puntos"
+                val editText = android.widget.EditText(this).apply {
+                    inputType = android.text.InputType.TYPE_CLASS_NUMBER
+                    hint = "Ingresa cantidad de puntos"
+                    setHintTextColor(android.graphics.Color.GRAY)
+                    setTextColor(android.graphics.Color.WHITE)
+                    textSize = 16f
+                    setPadding(16, 16, 16, 16)
+                }
 
-                android.app.AlertDialog.Builder(this)
-                    .setTitle("Canjear Puntos")
-                    .setMessage("Tienes $puntosTotales puntos disponibles\nCada punto = S/. 0.50\n\nIngresa la cantidad de puntos a canjear:")
-                    .setView(editText)
+                val containerView = android.widget.LinearLayout(this).apply {
+                    orientation = android.widget.LinearLayout.VERTICAL
+                    setPadding(32, 24, 32, 24)
+                    addView(android.widget.TextView(this@CuponesActivity).apply {
+                        text = "Tienes $puntosTotales puntos disponibles"
+                        textSize = 16f
+                        setTextColor(android.graphics.Color.WHITE)
+                        setTypeface(null, android.graphics.Typeface.BOLD)
+                        setPadding(0, 0, 0, 12)
+                    })
+                    addView(android.widget.TextView(this@CuponesActivity).apply {
+                        text = "📊 Cada punto = S/. 0.50 de descuento"
+                        textSize = 13f
+                        setTextColor(android.graphics.Color.LTGRAY)
+                        setPadding(0, 0, 0, 16)
+                    })
+                    addView(editText)
+                }
+
+                android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog)
+                    .setTitle("🎁 Canjear Puntos")
+                    .setView(containerView)
                     .setPositiveButton("CANJEAR") { _, _ ->
                         val puntosIngresados = editText.text.toString().toIntOrNull() ?: 0
 
                         when {
                             puntosIngresados <= 0 -> {
-                                android.app.AlertDialog.Builder(this)
-                                    .setTitle("Cantidad Inválida")
-                                    .setMessage("Ingresa una cantidad válida de puntos")
-                                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                                    .show()
+                                mostrarDialogoError("❌ Cantidad Inválida", "Por favor ingresa una cantidad válida de puntos (mínimo 1)")
                             }
                             puntosIngresados > puntosTotales -> {
-                                android.app.AlertDialog.Builder(this)
-                                    .setTitle("Puntos Insuficientes")
-                                    .setMessage("No tienes suficientes puntos. Máximo: $puntosTotales")
-                                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                                    .show()
+                                mostrarDialogoError("⚠️ Puntos Insuficientes", "No tienes suficientes puntos.\n\n📊 Disponibles: $puntosTotales puntos\n📋 Solicitados: $puntosIngresados puntos\n\nTe faltan ${puntosIngresados - puntosTotales} puntos")
                             }
                             else -> {
                                 val descuentoSoles = puntosIngresados * 0.50
-                                android.app.AlertDialog.Builder(this)
-                                    .setTitle("Confirmar Canje")
-                                    .setMessage("Vas a canjear $puntosIngresados puntos\nDescuento: S/. ${"%.2f".format(descuentoSoles)}")
-                                    .setPositiveButton("CONFIRMAR") { _, _ ->
+                                val confirmView = android.widget.LinearLayout(this).apply {
+                                    orientation = android.widget.LinearLayout.VERTICAL
+                                    setPadding(32, 24, 32, 24)
+
+                                    addView(android.widget.TextView(this@CuponesActivity).apply {
+                                        text = "📋 RESUMEN DEL CANJE"
+                                        textSize = 16f
+                                        setTextColor(android.graphics.Color.WHITE)
+                                        setTypeface(null, android.graphics.Typeface.BOLD)
+                                        gravity = android.view.Gravity.CENTER
+                                        setPadding(0, 0, 0, 20)
+                                    })
+
+                                    addView(android.widget.LinearLayout(this@CuponesActivity).apply {
+                                        orientation = android.widget.LinearLayout.VERTICAL
+                                        setBackgroundColor(android.graphics.Color.parseColor("#1E1E1E"))
+                                        setPadding(16, 12, 16, 12)
+
+                                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                                            text = "💎 Puntos a canjear: $puntosIngresados pts"
+                                            textSize = 14f
+                                            setTextColor(android.graphics.Color.WHITE)
+                                            setPadding(0, 4, 0, 4)
+                                        })
+
+                                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                                            text = "💰 Descuento obtenido: S/. ${"%.2f".format(descuentoSoles)}"
+                                            textSize = 14f
+                                            setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+                                            setTypeface(null, android.graphics.Typeface.BOLD)
+                                            setPadding(0, 4, 0, 4)
+                                        })
+
+                                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                                            text = "Puntos restantes: ${puntosTotales - puntosIngresados} pts"
+                                            textSize = 12f
+                                            setTextColor(android.graphics.Color.LTGRAY)
+                                            setPadding(0, 8, 0, 0)
+                                        })
+                                    })
+
+                                    addView(android.widget.TextView(this@CuponesActivity).apply {
+                                        text = "✅ El descuento se aplicará automáticamente en tu próxima compra"
+                                        textSize = 12f
+                                        setTextColor(android.graphics.Color.LTGRAY)
+                                        setPadding(0, 16, 0, 0)
+                                    })
+                                }
+
+                                android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog)
+                                    .setView(confirmView)
+                                    .setPositiveButton("✅ CONFIRMAR CANJE") { _, _ ->
                                         realizarCanjeoPuntos(uid, puntosIngresados)
                                     }
                                     .setNegativeButton("CANCELAR") { dialog, _ -> dialog.dismiss() }
@@ -173,6 +253,32 @@ class CuponesActivity : AppCompatActivity() {
                     .setNegativeButton("CANCELAR") { dialog, _ -> dialog.dismiss() }
                     .show()
             }
+    }
+
+    private fun mostrarDialogoError(titulo: String, mensaje: String) {
+        val view = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(32, 24, 32, 24)
+
+            addView(android.widget.TextView(this@CuponesActivity).apply {
+                text = titulo
+                textSize = 18f
+                setTextColor(android.graphics.Color.WHITE)
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setPadding(0, 0, 0, 12)
+            })
+
+            addView(android.widget.TextView(this@CuponesActivity).apply {
+                text = mensaje
+                textSize = 14f
+                setTextColor(android.graphics.Color.LTGRAY)
+            })
+        }
+
+        android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog)
+            .setView(view)
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun realizarCanjeoPuntos(uid: String, puntosCanjear: Int) {
@@ -198,16 +304,66 @@ class CuponesActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 Log.d("[v0] CuponesActivity", "Canje exitoso: $puntosCanjear puntos")
 
-                                // Save notification when points are redeemed
                                 guardarNotificacionCanje(uid, puntosCanjear, descuentoSoles)
 
                                 cargarPuntosUsuario()
                                 cargarHistorialPuntos()
 
-                                android.app.AlertDialog.Builder(this)
-                                    .setTitle("¡Canje Exitoso!")
-                                    .setMessage("¡Felicidades! Ganaste S/. ${"%.2f".format(descuentoSoles)} de descuento")
-                                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                                val successView = android.widget.LinearLayout(this).apply {
+                                    orientation = android.widget.LinearLayout.VERTICAL
+                                    setPadding(32, 24, 32, 24)
+                                    gravity = android.view.Gravity.CENTER
+
+                                    addView(android.widget.TextView(this@CuponesActivity).apply {
+                                        text = "🎉 ¡CANJE EXITOSO!"
+                                        textSize = 22f
+                                        setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+                                        setTypeface(null, android.graphics.Typeface.BOLD)
+                                        gravity = android.view.Gravity.CENTER
+                                        setPadding(0, 0, 0, 20)
+                                    })
+
+                                    addView(android.widget.LinearLayout(this@CuponesActivity).apply {
+                                        orientation = android.widget.LinearLayout.VERTICAL
+                                        setBackgroundColor(android.graphics.Color.parseColor("#1E1E1E"))
+                                        setPadding(16, 16, 16, 16)
+
+                                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                                            text = "✅ Canjeaste: $puntosCanjear puntos"
+                                            textSize = 14f
+                                            setTextColor(android.graphics.Color.WHITE)
+                                            setPadding(0, 4, 0, 4)
+                                        })
+
+                                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                                            text = "💰 Descuento obtenido: S/. ${"%.2f".format(descuentoSoles)}"
+                                            textSize = 14f
+                                            setTextColor(android.graphics.Color.parseColor("#FFD700"))
+                                            setTypeface(null, android.graphics.Typeface.BOLD)
+                                            setPadding(0, 8, 0, 4)
+                                        })
+
+                                        addView(android.widget.TextView(this@CuponesActivity).apply {
+                                            text = "📊 Puntos restantes: $nuevasCantidad"
+                                            textSize = 12f
+                                            setTextColor(android.graphics.Color.LTGRAY)
+                                            setPadding(0, 8, 0, 0)
+                                        })
+                                    })
+
+                                    addView(android.widget.TextView(this@CuponesActivity).apply {
+                                        text = "\n🎁 Tu descuento ha sido guardado\n✨ Se aplicará automáticamente en tu próxima compra\n📲 Revisa tus notificaciones para más detalles"
+                                        textSize = 12f
+                                        setTextColor(android.graphics.Color.LTGRAY)
+                                        gravity = android.view.Gravity.CENTER
+                                        setPadding(0, 16, 0, 0)
+                                    })
+                                }
+
+                                android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog)
+                                    .setView(successView)
+                                    .setPositiveButton("PERFECTO") { dialog, _ -> dialog.dismiss() }
+                                    .setCancelable(false)
                                     .show()
                             }
                             .addOnFailureListener { e ->
