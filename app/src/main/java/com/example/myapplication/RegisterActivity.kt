@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -94,8 +95,11 @@ class RegisterActivity : AppCompatActivity() {
                         val usuarioData = hashMapOf(
                             "nombre" to nombre,
                             "email" to correo,
-                            "celular" to celular,
-                            "puntos" to 0
+                            "telefono" to celular,
+                            "puntos" to 0,
+                            "activo" to true,
+                            "fechaRegistro" to Timestamp.now(),
+                            "isAdmin" to false
                         )
 
                         firestore.collection("usuarios").document(userId).set(usuarioData)

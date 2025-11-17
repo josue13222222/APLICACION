@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A237E"
+    android:background="@drawable/tech_background"
     tools:context=".AdminLoginActivity">
 
     <LinearLayout
@@ -89,13 +89,13 @@
             android:focusable="true" />
 
         <!-- Botón Login Admin -->
+        <!-- Changed button style from orange to red with black background theme -->
         <Button
             android:id="@+id/btnLoginAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="#FF6F00"
+            android:background="@drawable/btn_rounded"
             android:text="ACCEDER COMO ADMIN"
             android:textColor="@android:color/white"
             android:textStyle="bold" />

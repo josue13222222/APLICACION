@@ -118,7 +118,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/btn_rounded"
-            android:text="🔐 ACCESO ADMINISTRADORES"
+            android:text="ACCESO ADMINISTRADORES"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="16sp"

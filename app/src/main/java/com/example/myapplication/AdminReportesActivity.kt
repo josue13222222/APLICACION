@@ -1,10 +1,10 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,6 +66,12 @@ class AdminReportesActivity : AppCompatActivity() {
 
                 txtTotalUsuarios.text = total.toString()
                 txtUsuariosActivos.text = activos.toString()
+                Log.d("AdminReportes", "Usuarios cargados: Total=$total, Activos=$activos")
+            }
+            .addOnFailureListener { e ->
+                Log.d("AdminReportes", "Error al cargar usuarios: ${e.message}")
+                txtTotalUsuarios.text = "0"
+                txtUsuariosActivos.text = "0"
             }
     }
 
@@ -86,6 +92,13 @@ class AdminReportesActivity : AppCompatActivity() {
                 txtTotalEmpenos.text = total.toString()
                 txtEmpenosAprobados.text = aprobados.toString()
                 txtEmpenosPendientes.text = pendientes.toString()
+                Log.d("AdminReportes", "Empeños cargados: Total=$total, Aprobados=$aprobados, Pendientes=$pendientes")
+            }
+            .addOnFailureListener { e ->
+                Log.d("AdminReportes", "Error al cargar empeños: ${e.message}")
+                txtTotalEmpenos.text = "0"
+                txtEmpenosAprobados.text = "0"
+                txtEmpenosPendientes.text = "0"
             }
     }
 
@@ -102,6 +115,12 @@ class AdminReportesActivity : AppCompatActivity() {
 
                 txtTotalCupones.text = total.toString()
                 txtCuponesUsados.text = usados.toString()
+                Log.d("AdminReportes", "Cupones cargados: Total=$total, Usados=$usados")
+            }
+            .addOnFailureListener { e ->
+                Log.d("AdminReportes", "Error al cargar cupones: ${e.message}")
+                txtTotalCupones.text = "0"
+                txtCuponesUsados.text = "0"
             }
     }
 
@@ -124,8 +143,10 @@ class AdminReportesActivity : AppCompatActivity() {
                     totalIngresos += monto
                 }
                 txtIngresosMes.text = String.format("$%.2f", totalIngresos)
+                Log.d("AdminReportes", "Ingresos cargados: $totalIngresos")
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
+                Log.d("AdminReportes", "Error al cargar transacciones: ${e.message}")
                 txtIngresosMes.text = "$0.00"
             }
     }
@@ -140,7 +161,10 @@ class AdminReportesActivity : AppCompatActivity() {
         reporte.append("USUARIOS:\n")
         reporte.append("- Total: ${txtTotalUsuarios.text}\n")
         reporte.append("- Activos: ${txtUsuariosActivos.text}\n")
-        reporte.append("- Bloqueados: ${txtTotalUsuarios.text.toString().toInt() - txtUsuariosActivos.text.toString().toInt()}\n\n")
+        val totalUsuarios = txtTotalUsuarios.text.toString().toIntOrNull() ?: 0
+        val usuariosActivos = txtUsuariosActivos.text.toString().toIntOrNull() ?: 0
+        val bloqueados = totalUsuarios - usuariosActivos
+        reporte.append("- Bloqueados: $bloqueados\n\n")
 
         reporte.append("EMPEÑOS:\n")
         reporte.append("- Total: ${txtTotalEmpenos.text}\n")
@@ -157,8 +181,5 @@ class AdminReportesActivity : AppCompatActivity() {
         reporte.append("=== FIN DEL REPORTE ===")
 
         Toast.makeText(this, "Reporte generado exitosamente", Toast.LENGTH_LONG).show()
-
-        // Aquí podrías implementar funcionalidad para guardar o compartir el reporte
-        // Por ejemplo, guardarlo en un archivo o enviarlo por email
     }
 }
