@@ -112,21 +112,43 @@ class AdminDashboardActivity : AppCompatActivity() {
     }
 
     private fun cargarEstadisticas() {
-        firestore.collection("usuarios").get()
-            .addOnSuccessListener { usuariosSnapshot ->
-                firestore.collection("ordenes_reparacion").get()
-                    .addOnSuccessListener { ordenesSnapshot ->
-                        firestore.collection("empenos").get()
-                            .addOnSuccessListener { empenosSnapshot ->
+        firestore.collection("usuarios").addSnapshotListener { usuariosSnapshot, exception ->
+            if (exception != null) {
+                return@addSnapshotListener
+            }
+
+            if (usuariosSnapshot != null) {
+                firestore.collection("ordenes_reparacion").addSnapshotListener { ordenesSnapshot, ordenesException ->
+                    if (ordenesException != null) {
+                        return@addSnapshotListener
+                    }
+
+                    if (ordenesSnapshot != null) {
+                        firestore.collection("empenos").addSnapshotListener { empenosSnapshot, empenosException ->
+                            if (empenosException != null) {
+                                return@addSnapshotListener
+                            }
+
+                            if (empenosSnapshot != null) {
+                                var usuariosActivos = 0
+                                for (usuario in usuariosSnapshot) {
+                                    val activo = usuario.getBoolean("activo") ?: true
+                                    if (activo) usuariosActivos++
+                                }
+
                                 val estadisticas = """
                                     Usuarios Registrados: ${usuariosSnapshot.size()}
+                                    Usuarios Activos: $usuariosActivos
                                     Órdenes de Servicio: ${ordenesSnapshot.size()}
                                     Empeños Activos: ${empenosSnapshot.size()}
                                 """.trimIndent()
                                 tvEstadisticas.text = estadisticas
                             }
+                        }
                     }
+                }
             }
+        }
     }
 
     private fun checkCameraPermission(): Boolean {

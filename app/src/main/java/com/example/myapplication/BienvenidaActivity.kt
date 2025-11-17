@@ -50,6 +50,7 @@ class BienvenidaActivity : AppCompatActivity() {
         val btnCupones = findViewById<Button>(R.id.btnCupones)
         val btnPagos = findViewById<Button>(R.id.btnPagos)
         val btnSeguimiento = findViewById<Button>(R.id.btnSeguimiento)
+        val btnDirecciones = findViewById<Button>(R.id.btnDirecciones)
 
         // Funcionalidad de botones
         btnMicuenta.setOnClickListener {
@@ -74,6 +75,10 @@ class BienvenidaActivity : AppCompatActivity() {
 
         btnPagos.setOnClickListener {
             startActivity(Intent(this, PagosActivity::class.java))
+        }
+
+        btnDirecciones.setOnClickListener {
+            startActivity(Intent(this, DireccionesActivity::class.java))
         }
 
         // Logo de Facebook con enlace
@@ -114,39 +119,14 @@ class BienvenidaActivity : AppCompatActivity() {
     }
 
     private fun calcularPuntosTotales(uid: String) {
-        var puntosEmpeños = 0
-        var puntosReparaciones = 0
-        var puntosPagos = 0
-
-        // Puntos de empeños
-        firestore.collection("empenos")
-            .whereEqualTo("userId", uid)
-            .whereEqualTo("estado", "Aprobado")
-            .get()
-            .addOnSuccessListener { empenosSnapshot ->
-                puntosEmpeños = empenosSnapshot.documents.sumOf {
-                    it.getLong("puntos")?.toInt() ?: 0
-                }
-                actualizarTextoPuntos(puntosEmpeños, puntosReparaciones, puntosPagos)
+        firestore.collection("usuarios").document(uid).get()
+            .addOnSuccessListener { document ->
+                val totalPuntos = document.getLong("puntos")?.toInt() ?: 0
+                val valorSoles = totalPuntos * 0.50
+                tvPuntos.text = "Tienes $totalPuntos puntos de cupones (S/. ${"%.2f".format(valorSoles)})"
             }
-
-        // Puntos de reparaciones (100 soles = 1 punto)
-        firestore.collection("pagos")
-            .whereEqualTo("userId", uid)
-            .whereEqualTo("estado", "Completado")
-            .get()
-            .addOnSuccessListener { pagosSnapshot ->
-                val totalPagos = pagosSnapshot.documents.sumOf {
-                    it.getDouble("monto") ?: 0.0
-                }
-                puntosPagos = (totalPagos / 100).toInt()
-                actualizarTextoPuntos(puntosEmpeños, puntosReparaciones, puntosPagos)
+            .addOnFailureListener { e ->
+                tvPuntos.text = "Tienes 0 puntos de cupones (S/. 0.00)"
             }
-    }
-
-    private fun actualizarTextoPuntos(empeños: Int, reparaciones: Int, pagos: Int) {
-        val totalPuntos = empeños + reparaciones + pagos
-        val valorSoles = totalPuntos * 0.50
-        tvPuntos.text = "Tienes $totalPuntos puntos de cupones (S/. ${"%.2f".format(valorSoles)})"
     }
 }

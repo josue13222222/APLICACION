@@ -6,7 +6,6 @@
     android:padding="16dp"
     android:background="@drawable/fondo">
 
-    Header actualizado
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +16,6 @@
         android:gravity="center"
         android:layout_marginBottom="20dp" />
 
-    Estadísticas de puntos
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +50,23 @@
 
     </LinearLayout>
 
-    Lista de usuarios con puntos
+    <!-- Agregar buscador -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/etBuscarUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Buscar por nombre, email o teléfono..."
+            android:background="@drawable/edittext_background"
+            android:padding="12dp" />
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

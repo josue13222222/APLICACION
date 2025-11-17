@@ -51,6 +51,12 @@ class UsuariosAdapter(
         }
     }
 
+    fun updateList(newList: MutableList<Usuario>) {
+        usuariosList.clear()
+        usuariosList.addAll(newList)
+        notifyDataSetChanged()
+    }
+
     class UsuarioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvNombre: TextView = itemView.findViewById(R.id.tvNombre)
         val tvEmail: TextView = itemView.findViewById(R.id.tvEmail)

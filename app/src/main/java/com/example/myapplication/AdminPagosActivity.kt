@@ -112,7 +112,7 @@ class AdminPagosActivity : AppCompatActivity() {
                 .update("estado", nuevoEstado)
                 .addOnSuccessListener {
                     if (nuevoEstado == "Confirmado") {
-                        android.util.Log.d("[v0]", "Confirming payment for phone: ${pago.telefonoUsuario}, amount: ${pago.monto}")
+                        android.util.Log.d("[v0]", "Confirming payment: UID=${pago.userId}, Phone=${pago.telefonoUsuario}, Email=${pago.correoUsuario}, Amount=${pago.monto}")
                         agregarPuntosAlUsuario(pago)
                     }
                     Toast.makeText(this, "Estado actualizado a $nuevoEstado", Toast.LENGTH_SHORT).show()
@@ -125,12 +125,24 @@ class AdminPagosActivity : AppCompatActivity() {
     }
 
     private fun agregarPuntosAlUsuario(pago: Pago) {
-        if (pago.telefonoUsuario.isEmpty()) {
-            Toast.makeText(this, "❌ Teléfono de usuario no disponible", Toast.LENGTH_SHORT).show()
-            return
+        when {
+            pago.userId.isNotEmpty() -> {
+                android.util.Log.d("[v0]", "Buscando por UID: ${pago.userId}")
+                SistemaPuntos.agregarPuntosFirestoreUID(pago.userId, pago.monto)
+            }
+            pago.telefonoUsuario.isNotEmpty() -> {
+                android.util.Log.d("[v0]", "Buscando por teléfono: ${pago.telefonoUsuario}")
+                SistemaPuntos.agregarPuntosFirestore(pago.telefonoUsuario, pago.monto)
+            }
+            pago.correoUsuario.isNotEmpty() -> {
+                android.util.Log.d("[v0]", "Buscando por email: ${pago.correoUsuario}")
+                SistemaPuntos.agregarPuntosFirestoreEmail(pago.correoUsuario, pago.monto)
+            }
+            else -> {
+                Toast.makeText(this, "Error: No hay identificador disponible para el usuario", Toast.LENGTH_SHORT).show()
+                android.util.Log.e("[v0]", "No identifiers found in pago: $pago")
+            }
         }
-        SistemaPuntos.agregarPuntosFirestore(pago.telefonoUsuario, pago.monto)
-        Toast.makeText(this, "✅ Puntos sumados correctamente", Toast.LENGTH_SHORT).show()
     }
 
     fun eliminarPago(pagoId: String) {

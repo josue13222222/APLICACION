@@ -1,12 +1,16 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AdminUsuariosActivity : AppCompatActivity() {
 
@@ -21,6 +25,7 @@ class AdminUsuariosActivity : AppCompatActivity() {
     private lateinit var txtUsuariosBloqueados: TextView
 
     private var usuariosList = mutableListOf<Usuario>()
+    private var usuariosListCompleta = mutableListOf<Usuario>()
     private lateinit var usuariosAdapter: UsuariosAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +35,8 @@ class AdminUsuariosActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         initViews()
         setupRecyclerView()
-        loadUsuarios()
+        setupSearch()
+        loadUsuariosRealTime()  // Cambiar a tiempo real con snapshot listener
         loadEstadisticas()
 
         btnBuscar.setOnClickListener { buscarUsuario() }
@@ -51,34 +57,60 @@ class AdminUsuariosActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         usuariosAdapter = UsuariosAdapter(this, usuariosList) { usuario ->
-            // Callback para seleccionar usuario
             actualizarBotonesEstado(usuario)
+            verHistorialUsuario(usuario)
         }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = usuariosAdapter
     }
 
-    private fun loadUsuarios() {
+    private fun setupSearch() {
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty()) {
+                    usuariosAdapter.updateList(usuariosListCompleta)
+                } else {
+                    buscarUsuarioDinamico(s.toString())
+                }
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun loadUsuariosRealTime() {
         db.collection("usuarios")
             .orderBy("fechaRegistro", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { documents ->
-                usuariosList.clear()
-                for (document in documents) {
-                    val usuario = document.toObject(Usuario::class.java)
-                    usuario.id = document.id
-                    usuariosList.add(usuario)
+            .addSnapshotListener { documents, exception ->
+                if (exception != null) {
+                    Toast.makeText(this, "Error al cargar usuarios: ${exception.message}", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
                 }
+
+                usuariosList.clear()
+                usuariosListCompleta.clear()
+
+                if (documents != null) {
+                    for (document in documents) {
+                        val usuario = document.toObject(Usuario::class.java)
+                        usuario.id = document.id
+                        usuariosList.add(usuario)
+                        usuariosListCompleta.add(usuario)
+                    }
+                }
+
                 usuariosAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error al cargar usuarios: ${exception.message}", Toast.LENGTH_SHORT).show()
+                loadEstadisticas()
             }
     }
 
     private fun loadEstadisticas() {
-        db.collection("usuarios").get()
-            .addOnSuccessListener { documents ->
+        db.collection("usuarios").addSnapshotListener { documents, exception ->
+            if (exception != null) {
+                return@addSnapshotListener
+            }
+
+            if (documents != null) {
                 val total = documents.size()
                 var activos = 0
                 var bloqueados = 0
@@ -92,28 +124,25 @@ class AdminUsuariosActivity : AppCompatActivity() {
                 txtUsuariosActivos.text = "Activos: $activos"
                 txtUsuariosBloqueados.text = "Bloqueados: $bloqueados"
             }
+        }
     }
 
     private fun buscarUsuario() {
         val query = searchEditText.text.toString().trim()
         if (query.isEmpty()) {
-            loadUsuarios()
+            usuariosAdapter.updateList(usuariosListCompleta)
             return
         }
+        buscarUsuarioDinamico(query)
+    }
 
-        db.collection("usuarios")
-            .whereGreaterThanOrEqualTo("email", query)
-            .whereLessThanOrEqualTo("email", query + '\uf8ff')
-            .get()
-            .addOnSuccessListener { documents ->
-                usuariosList.clear()
-                for (document in documents) {
-                    val usuario = document.toObject(Usuario::class.java)
-                    usuario.id = document.id
-                    usuariosList.add(usuario)
-                }
-                usuariosAdapter.notifyDataSetChanged()
-            }
+    private fun buscarUsuarioDinamico(query: String) {
+        val filtered = usuariosListCompleta.filter { usuario ->
+            usuario.nombre.contains(query, ignoreCase = true) ||
+                    usuario.email.contains(query, ignoreCase = true) ||
+                    usuario.telefono.contains(query, ignoreCase = true)
+        }.toMutableList()
+        usuariosAdapter.updateList(filtered)
     }
 
     private fun cambiarEstadoUsuario(activo: Boolean) {
@@ -128,8 +157,6 @@ class AdminUsuariosActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 val estado = if (activo) "desbloqueado" else "bloqueado"
                 Toast.makeText(this, "Usuario $estado exitosamente", Toast.LENGTH_SHORT).show()
-                loadUsuarios()
-                loadEstadisticas()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -139,5 +166,36 @@ class AdminUsuariosActivity : AppCompatActivity() {
     private fun actualizarBotonesEstado(usuario: Usuario) {
         btnBloquear.isEnabled = usuario.activo
         btnDesbloquear.isEnabled = !usuario.activo
+    }
+
+    private fun verHistorialUsuario(usuario: Usuario) {
+        db.collection("usuarios").document(usuario.id).collection("historial")
+            .orderBy("fecha", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .limit(20)
+            .get()
+            .addOnSuccessListener { documents ->
+                val historialText = StringBuilder("Historial de ${usuario.nombre}:\n\n")
+                if (documents.isEmpty) {
+                    historialText.append("Sin historial de transacciones")
+                } else {
+                    for ((index, doc) in documents.withIndex()) {
+                        val tipo = doc.getString("tipo") ?: "Desconocido"
+                        val puntos = doc.getLong("puntos") ?: 0
+                        val fecha = doc.getLong("fecha") ?: 0
+                        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                        val fechaFormato = sdf.format(Date(fecha))
+                        historialText.append("${index + 1}. $tipo: $puntos puntos - $fechaFormato\n")
+                    }
+                }
+
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Historial de Transacciones")
+                    .setMessage(historialText.toString())
+                    .setPositiveButton("Cerrar") { _, _ -> }
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al cargar historial", Toast.LENGTH_SHORT).show()
+            }
     }
 }

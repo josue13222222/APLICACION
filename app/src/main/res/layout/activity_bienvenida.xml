@@ -138,7 +138,6 @@
             android:background="@drawable/btn_rounded"
             android:layout_marginTop="20dp" />
 
-
         <!-- Agregando botón de pagos para usuarios -->
         <Button
             android:id="@+id/btnPagos"
@@ -151,6 +150,18 @@
             android:background="@drawable/pago_button_background"
             android:layout_marginTop="12dp"
             android:elevation="6dp" />
+
+        <!-- Agregar botón direcciones -->
+        <Button
+            android:id="@+id/btnDirecciones"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="DIRECCIONES"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:background="@drawable/btn_rounded"
+            android:layout_marginTop="12dp" />
 
         <!-- Texto redes sociales -->
         <TextView

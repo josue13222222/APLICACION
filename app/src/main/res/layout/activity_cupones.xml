@@ -9,7 +9,6 @@
     android:background="#1E1E1E"
     tools:context=".CuponesActivity">
 
-    Título de la pantalla
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
@@ -23,7 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    Card de puntos
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPuntos"
         android:layout_width="0dp"
@@ -69,10 +67,21 @@
                 android:textSize="14sp"
                 android:textColor="#BBDEFB"
                 android:layout_marginTop="4dp" />
+
+            <!-- Botón para canjear puntos -->
+            <Button
+                android:id="@+id/btnCanjearPuntos"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🎁 Canjear Puntos"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:background="#FF6B00"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    Título del historial
     <TextView
         android:id="@+id/tvHistorial"
         android:layout_width="wrap_content"
@@ -86,7 +95,6 @@
         app:layout_constraintTop_toBottomOf="@id/cardPuntos"
         app:layout_constraintStart_toStartOf="parent" />
 
-    Lista de historial de puntos
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCupones"
         android:layout_width="0dp"

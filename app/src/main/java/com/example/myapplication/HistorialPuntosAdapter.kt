@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HistorialPuntosAdapter(
     private val historialList: List<HistorialPunto>
@@ -21,7 +23,9 @@ class HistorialPuntosAdapter(
         holder.tvTipo.text = item.tipo
         holder.tvDescripcion.text = item.descripcion
         holder.tvPuntos.text = "+${item.puntos} puntos"
-        holder.tvFecha.text = item.fecha.substring(0, minOf(10, item.fecha.length))
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val fechaFormato = dateFormat.format(Date(item.fecha))
+        holder.tvFecha.text = fechaFormato
     }
 
     override fun getItemCount(): Int = historialList.size

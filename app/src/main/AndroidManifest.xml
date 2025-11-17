@@ -166,6 +166,10 @@
         <activity android:name=".VerImagenFullscreenActivity"
             android:exported="false" />
 
+        <!-- Agregando DireccionesActivity al manifest -->
+        <activity android:name=".DireccionesActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
